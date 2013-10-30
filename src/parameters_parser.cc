@@ -6,9 +6,9 @@
 
 using ACO::ParametersParser;
 
-  /**
-   * Parses the raw parameters to output structure
-   */
+/**
+ * Parses the raw parameters to output structure
+ */
 void ParametersParser::parseParameters()
 {
   if (parametersCount_ != EXPECTED_PARAMETERS_NUMBER)

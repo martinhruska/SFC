@@ -8,6 +8,6 @@ namespace ACO
 
 class ACO::Vertex
 {
-}
+};
 
 #endif
