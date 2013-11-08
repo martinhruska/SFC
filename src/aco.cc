@@ -24,6 +24,9 @@ using namespace ACO;
 
 const std::string e_FileRead = "Cannot read a given file";
 
+/**
+ * Parameters are processed here
+ */
 Parameters parseParameters(int argc, char** argv)
 {
   Parameters parameters;
@@ -34,9 +37,11 @@ Parameters parseParameters(int argc, char** argv)
   return parameters;
 }
 
-Graph parseGraph(std::string pathInputFile)
+/**
+ * Graph is parsed from input file
+ */
+void parseGraph(std::string pathInputFile, Graph& graph)
 {
-  Graph graph;
   GraphParser graphParser;
 
   std::ifstream inputFile(pathInputFile);
@@ -45,8 +50,6 @@ Graph parseGraph(std::string pathInputFile)
     throw std::runtime_error(e_FileRead);
   }
   graphParser.parseGraphFromFile(inputFile, graph);
-
-  return graph;
 }
 
 int main(int argc, char** argv)
@@ -56,8 +59,8 @@ int main(int argc, char** argv)
   Graph graph;
 
   try
-  {
-    graph = parseGraph(parameters.getInputFile());
+  {// tries parse graph
+    parseGraph(parameters.getInputFile(), graph);
   }
   catch (std::runtime_error& e)
   {

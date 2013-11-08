@@ -6,7 +6,9 @@ ACO=aco
 PARSER=parameters_parser
 GRAPH=graph
 GRAPH_PARSER=graph_parser
-FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o
+VERTEX=vertex
+EDGE=edge
+FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o $(VERTEX).o $(EDGE).o
 
 all: $(RESULT)
 
@@ -21,6 +23,12 @@ $(GRAPH).o: $(GRAPH).cc
 
 $(GRAPH_PARSER).o: $(GRAPH_PARSER).cc
 	$(GCC) $(GCCFLAGS) $(GRAPH_PARSER).cc -c
+
+$(VERTEX).o: $(VERTEX).cc
+	$(GCC) $(GCCFLAGS) $(VERTEX).cc -c
+
+$(EDGE).o: $(EDGE).cc
+	$(GCC) $(GCCFLAGS) $(EDGE).cc -c
 
 clean:
 	rm *.o aco
