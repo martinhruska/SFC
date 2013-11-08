@@ -19,6 +19,7 @@
 #include "parameters_parser.hh"
 #include "graph.hh"
 #include "graph_parser.hh"
+#include "ant_population.hh"
 
 using namespace ACO;
 
@@ -67,6 +68,9 @@ int main(int argc, char** argv)
     std::cerr  << e.what() << std::endl;
     return EXIT_FAILURE;
   }
+  std::cerr << graph.serialize() << std::endl;
+  
+  AntPopulation ants(parameters.getAntsNumber());
   
   //generate population
   // algorithm alone

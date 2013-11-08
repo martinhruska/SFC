@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <string>
 
-#include "edge.hh"
+#include "aco_classes.hh"
 
 // Class declared in edge.hh
 
@@ -23,10 +23,12 @@ public: // constructor
 
 public: // public methods
   void getAllNeighboursId(std::unordered_set<int>& neighbours);
+  void getAllNeighbours(std::unordered_set<Vertex *>& neighbours);
   void addEdge(Edge *edge) {edges_.insert(edge);}
 
 public: // getters and setters
   int getId() const {return id_;}
+  String& getName() {return name_;}
 
 public: //operators
   bool operator ==(const Vertex& vertex) const;

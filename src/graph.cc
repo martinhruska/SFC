@@ -30,7 +30,7 @@ ACO::Vertex& ACO::Graph::translateVertex(String& name)
  * It checks whether vertices are not already connected first,
  * and they are not the edge is added.
  */
-ACO::Edge& ACO::Graph::addEdge(Vertex& v1, Vertex& v2, int distance)
+ACO::Edge& ACO::Graph::addEdge(Vertex& v1, Vertex& v2, Distance distance)
 {
   std::unordered_set<int> v1Neighbours;
 
@@ -41,11 +41,27 @@ ACO::Edge& ACO::Graph::addEdge(Vertex& v1, Vertex& v2, int distance)
     throw std::runtime_error(e_edgeAlreadyDeclared);
   }
  
-  edges_.push_back(Edge(v1, v2, distance));
+  edges_.push_back(Edge(edgeId_++, v1, v2, distance));
   Edge& e = edges_.back();
   v1.addEdge(&e);
   v2.addEdge(&e);
   return e;
+}
+
+/**
+ * Serializes graph to string
+ */
+std::string ACO::Graph::serialize()
+{
+  String res;
+
+  for (Edge& e : edges_)
+  { // add edges to result
+    res += e.getVertex1().getName() + " " + e.getVertex2().getName()
+      + " " + std::to_string(e.getDistance()) + "\n";
+  }
+
+  return res;
 }
 
 ACO::Vertex* ACO::Graph::getRandomVertex()

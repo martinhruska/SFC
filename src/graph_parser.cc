@@ -1,11 +1,14 @@
 // standard libraries
 #include <stdexcept>
-#include <iostream>
 #include <unordered_set>
+#include <iostream>
 
 // ACO libraries
 #include "graph_parser.hh"
 
+/**
+ * Read whole input file and parse each line
+ */
 void ACO::GraphParser::parseGraphFromFile(std::ifstream& inputFile,
     ACO::Graph& graph)
 {
@@ -19,7 +22,6 @@ void ACO::GraphParser::parseGraphFromFile(std::ifstream& inputFile,
   while (getline(inputFile, readLine))
   {
     parseFormatedLine(readLine, graph);
-    std::cout << readLine << std::endl;
   }
 }
 
@@ -27,12 +29,12 @@ void ACO::GraphParser::parseGraphFromFile(std::ifstream& inputFile,
  * Parse a line given as a string and add it to
  * the result string
  */
-void ACO::GraphParser::parseFormatedLine(String& line, ACO::Graph& graph)
+void ACO::GraphParser::parseFormatedLine(String& line, Graph& graph)
 {
   unsigned long int spacePosition = 0;
   const char space = ' ';
   String node1, node2;
-  int distance;
+  Graph::Distance distance;
 
   // parse first node
   spacePosition = line.find(space);
@@ -51,12 +53,16 @@ void ACO::GraphParser::parseFormatedLine(String& line, ACO::Graph& graph)
   }
   node2 = line.substr(lastSpace+1, spacePosition-lastSpace);
 
-  //TRANSLATE string to intern representation
-  // pointerV1, pointerV2, add(pE,pV1,pV2)
-  // parse distance
   try 
-  {
-    distance = std::stoi(line.substr(spacePosition+1));
+  { // parse distance
+    String::size_type endOfInt;
+    String distanceString = line.substr(spacePosition+1);
+    distance = std::stof(distanceString, &endOfInt);
+
+    if (endOfInt != distanceString.size())
+    { // some mess after integer was not parsed
+      throw std::runtime_error(e_badFormat+line);
+    }
   }
   catch (std::exception e)
   {
@@ -72,7 +78,7 @@ void ACO::GraphParser::parseFormatedLine(String& line, ACO::Graph& graph)
  * then add their connection
  */
 void ACO::GraphParser::addTransitionToGraph(String& node1, String& node2,
-    int distance, Graph& graph)
+    Graph::Distance distance, Graph& graph)
 {
   Vertex& v1 = graph.translateVertex(node1);
   Vertex& v2 = graph.translateVertex(node2);

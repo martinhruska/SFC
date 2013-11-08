@@ -16,6 +16,8 @@ namespace ACO
 
 class ACO::Graph
 {
+public: // public data types
+  typedef Edge::Distance Distance;
 private: // private data types
   typedef std::string String;
 
@@ -31,14 +33,16 @@ private: // private data members
 
   std::unordered_map<String, Vertex> verticesTranslator_;
 
-public: // public methods
+public: // constructors
   Graph() : vertexId_(0), edgeId_(0) {};
 
+public: // public methods
+  // Translates vertex from string to intern representation
   Vertex& translateVertex(String& name);
-
-  //void addVertex(Vertex *vertex) {vertices_.push_back(vertex);}
-  Edge& addEdge(Vertex& v1, Vertex& v2, int distance);
-
+  // Add edge if it is not already present in graph
+  Edge& addEdge(Vertex& v1, Vertex& v2, Distance distance);
+  // Serializes graph to string
+  String serialize();
   Vertex* getRandomVertex();
   Edge* getRandomEdge();
 };

@@ -29,7 +29,7 @@ public: // public methods
 private: // private methods
   void parseFormatedLine(String& line, Graph& graph);
   void addTransitionToGraph(String& node1, String& node2,
-      int distance, Graph& graph);
+      Graph::Distance distance, Graph& graph);
 };
 
 #endif

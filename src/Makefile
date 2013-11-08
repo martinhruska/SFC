@@ -8,7 +8,9 @@ GRAPH=graph
 GRAPH_PARSER=graph_parser
 VERTEX=vertex
 EDGE=edge
-FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o $(VERTEX).o $(EDGE).o
+ANT=ant
+ANT_POP=ant_population
+FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o $(VERTEX).o $(EDGE).o $(ANT).o $(ANT_POP).o
 
 all: $(RESULT)
 
@@ -27,8 +29,14 @@ $(GRAPH_PARSER).o: $(GRAPH_PARSER).cc
 $(VERTEX).o: $(VERTEX).cc
 	$(GCC) $(GCCFLAGS) $(VERTEX).cc -c
 
+$(ANT).o: $(ANT).cc
+	$(GCC) $(GCCFLAGS) $(ANT).cc -c
+
 $(EDGE).o: $(EDGE).cc
 	$(GCC) $(GCCFLAGS) $(EDGE).cc -c
+
+$(ANT_POP).o: $(ANT_POP).cc
+	$(GCC) $(GCCFLAGS) $(ANT_POP).cc -c
 
 clean:
 	rm *.o aco
