@@ -1,5 +1,11 @@
 #include "ant_population.hh"
 
+ACO::AntPopulation::AntPopulation(int populationSize) :
+  antId_(0), populationSize_(populationSize)
+{
+  populate();
+}
+
 /**
  * Returns random ant from population.
  */

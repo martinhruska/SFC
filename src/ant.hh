@@ -29,7 +29,7 @@ public: // public methods
 
 public: // getters
   int getId() {return id_;}
-  Vertices& getVisitedVertices() {return visitedVertices_;}
+  const Vertices& getVisitedVertices() const {return visitedVertices_;}
   bool isGoalSatisfied() {return goalSatisfied_;}
 
 public: // setters

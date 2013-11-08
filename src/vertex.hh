@@ -28,7 +28,7 @@ public: // public methods
 
 public: // getters and setters
   int getId() const {return id_;}
-  String& getName() {return name_;}
+  const String& getName() const {return name_;}
 
 public: //operators
   bool operator ==(const Vertex& vertex) const;

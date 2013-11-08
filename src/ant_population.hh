@@ -25,14 +25,16 @@ public: // data members
   Population population_;
 
 public: // constructor
-  AntPopulation(int populationSize) : antId_(0),
-    populationSize_(populationSize) {}
+  AntPopulation(int populationSize);
 
 public: // public methods
   Ant& getRandomAnt();
 
 private: // private methods
   void populate();
+
+public: // getters
+  const Population& getPopulation() const {return population_;}
 };
 
 #endif

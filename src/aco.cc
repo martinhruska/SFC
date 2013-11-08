@@ -71,6 +71,7 @@ int main(int argc, char** argv)
   std::cerr << graph.serialize() << std::endl;
   
   AntPopulation ants(parameters.getAntsNumber());
+  std::cerr << "Population size is: " << ants.getPopulation().size() << std::endl;
   
   //generate population
   // algorithm alone
