@@ -10,7 +10,9 @@ VERTEX=vertex
 EDGE=edge
 ANT=ant
 ANT_POP=ant_population
-FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o $(VERTEX).o $(EDGE).o $(ANT).o $(ANT_POP).o
+ACO_ALG=aco_algorithm
+RANDOM=random_provider
+FILES=$(ACO).cc $(PARSER).o $(GRAPH).o $(GRAPH_PARSER).o $(VERTEX).o $(EDGE).o $(ANT).o $(ANT_POP).o $(ACO_ALG).o $(RANDOM).o
 
 all: $(RESULT)
 
@@ -37,6 +39,12 @@ $(EDGE).o: $(EDGE).cc
 
 $(ANT_POP).o: $(ANT_POP).cc
 	$(GCC) $(GCCFLAGS) $(ANT_POP).cc -c
+
+$(ACO_ALG).o: $(ACO_ALG).cc
+	$(GCC) $(GCCFLAGS) $(ACO_ALG).cc -c
+
+$(RANDOM).o: $(RANDOM).cc
+	$(GCC) $(GCCFLAGS) $(RANDOM).cc -c
 
 clean:
 	rm *.o aco

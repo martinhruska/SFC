@@ -12,11 +12,11 @@ class ACO::Vertex
 {
 private: // private data types
   typedef std::string String;
-  
+  typedef std::unordered_set<Edge *> Edges;
 private:
   String name_; // name of vertex
   int id_; // id of vertex
-  std::unordered_set<Edge *> edges_;
+  Edges edges_;
 
 public: // constructor
   Vertex(String name, int id) : name_(name), id_(id) {}
@@ -29,10 +29,11 @@ public: // public methods
 public: // getters and setters
   int getId() const {return id_;}
   const String& getName() const {return name_;}
+  unsigned int getSizeEdges() {return edges_.size();}
+  const Edges& getEdges() const {return edges_;}
 
 public: //operators
   bool operator ==(const Vertex& vertex) const;
-
 };
 
 #endif

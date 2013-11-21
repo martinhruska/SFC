@@ -20,6 +20,7 @@
 #include "graph.hh"
 #include "graph_parser.hh"
 #include "ant_population.hh"
+#include "aco_algorithm.hh"
 
 using namespace ACO;
 
@@ -69,11 +70,19 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
   std::cerr << graph.serialize() << std::endl;
-  
+
+  if (parameters.getGraphComplete() && !graph.checkCompletness())
+  {
+    std::cerr << "Graph is not complete"  << std::endl;
+    return EXIT_FAILURE;
+  }
+
   AntPopulation ants(parameters.getAntsNumber());
   std::cerr << "Population size is: " << ants.getPopulation().size() << std::endl;
-  
-  //generate population
+ 
+  ACOAlgorithm aco(ants, graph, RandomProvider(),
+      parameters.getMaximalIterations());
+  aco.compute();
   // algorithm alone
   // get result
   // show result

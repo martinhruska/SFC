@@ -11,7 +11,7 @@ using ACO::ParametersParser;
  */
 void ParametersParser::parseParameters()
 {
-  if (parametersCount_ != EXPECTED_PARAMETERS_NUMBER)
+  if (parametersCount_ < EXPECTED_PARAMETERS_NUMBER)
   {
     throw std::runtime_error(errorNotEnoughParameters_);
   }
@@ -43,6 +43,11 @@ void ParametersParser::parseParameters()
         else if (parameterRaw == "-a")
         {
           state = 3;
+        }
+        else if (parameterRaw == "-c")
+        {
+          state = 0;
+          parameters_.setGraphComplete();
         }
         else
         {

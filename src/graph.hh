@@ -24,14 +24,19 @@ private: // private data types
 private: // private constants
   const String e_edgeAlreadyDeclared = "The edge has been already declared";
 
+private: // private data types
+  typedef std::unordered_map<int, Edge> EdgesTranslator;
+  typedef std::vector<Edge *> Edges;
+  typedef std::vector<Vertex *> Vertices;
 private: // private data members
   int vertexId_;
   int edgeId_;
 
-  std::unordered_set<Vertex *> vertices_;
-  std::vector<Edge> edges_;
+  Vertices vertices_;
+  Edges edges_;
 
   std::unordered_map<String, Vertex> verticesTranslator_;
+  EdgesTranslator edgesTranslator_;
 
 public: // constructors
   Graph() : vertexId_(0), edgeId_(0) {};
@@ -45,6 +50,14 @@ public: // public methods
   String serialize();
   Vertex* getRandomVertex();
   Edge* getRandomEdge();
+
+  bool checkCompletness();
+
+public: // public getters
+  int getEdgesNumber() {return edges_.size();}
+  int getVerticesNumber() {return vertices_.size();}
+  Vertex* getVertexAt(int position) {return vertices_.at(position);}
+  const Vertices& getVertices() const {return vertices_;}
 };
 
 #endif

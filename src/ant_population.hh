@@ -13,15 +13,16 @@ namespace ACO
 
 class ACO::AntPopulation
 {
-private: // private data types
+public: // private data types
   typedef std::vector<Ant> Population;
 
 private: // private constants
-  std::string e_noMoreAnt = "No ant are available";
+  std::string e_noMoreAnt = "No ants are available";
 
 public: // data members
   int antId_;
   int populationSize_;
+  int actAnt_;
   Population population_;
 
 public: // constructor
@@ -29,12 +30,13 @@ public: // constructor
 
 public: // public methods
   Ant& getRandomAnt();
+  Ant& getNextAnt() {return population_.at(actAnt_++);}
 
 private: // private methods
   void populate();
 
 public: // getters
-  const Population& getPopulation() const {return population_;}
+  Population& getPopulation() {return population_;}
 };
 
 #endif

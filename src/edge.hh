@@ -31,6 +31,7 @@ public: // public methods
   void updatePheromon();
 
 public: // public getters
+  int getId() {return id_;}
   const Vertex& getVertex1() const {return v1_;}
   const Vertex& getVertex2() const {return v2_;}
   Distance getDistance() {return distance_;}

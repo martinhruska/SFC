@@ -1,7 +1,6 @@
 // standard libraries
 #include <stdexcept>
 #include <unordered_set>
-#include <iostream>
 
 // ACO libraries
 #include "graph_parser.hh"
@@ -51,7 +50,7 @@ void ACO::GraphParser::parseFormatedLine(String& line, Graph& graph)
   {
     throw std::runtime_error(e_badFormat+line);
   }
-  node2 = line.substr(lastSpace+1, spacePosition-lastSpace);
+  node2 = line.substr(lastSpace+1, spacePosition-lastSpace-1);
 
   try 
   { // parse distance

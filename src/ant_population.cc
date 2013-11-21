@@ -1,7 +1,7 @@
 #include "ant_population.hh"
 
 ACO::AntPopulation::AntPopulation(int populationSize) :
-  antId_(0), populationSize_(populationSize)
+  antId_(0), populationSize_(populationSize), actAnt_(0)
 {
   populate();
 }
@@ -19,7 +19,6 @@ ACO::Ant& ACO::AntPopulation::getRandomAnt()
   // later chose one random
   return population_.back();
 }
-
 
 /**
  * Create populations with size defined

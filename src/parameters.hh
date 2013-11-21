@@ -30,18 +30,22 @@ private: // private data members
   int maxIterations_; // number of the maximal iterations
   String inputFile_; // path to a input file
   int antsNumber_; // number of ants
+  bool graphComplete_; // should be graph complete
 
 public: // public methods
-  Parameters() : maxIterations_(MAX_DEFAULT_ITERATION), inputFile_()
+  Parameters() :
+    maxIterations_(MAX_DEFAULT_ITERATION), inputFile_(), graphComplete_(false)
   {}
 
 public: // getters and setters
   int getMaximalIterations() {return maxIterations_;}
   String getInputFile() {return inputFile_;}
   int getAntsNumber() {return antsNumber_;}
+  bool getGraphComplete() {return graphComplete_;}
 
   void setMaximalIterations(int maxIterations) {maxIterations_ = maxIterations;}
   void setInputFile(String inputFile) {inputFile_ = inputFile;}
   void setAntsNumber(int antsNumber) {antsNumber_ = antsNumber;}
+  void setGraphComplete() {graphComplete_ = true;}
 };
 #endif

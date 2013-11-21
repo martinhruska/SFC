@@ -1,6 +1,7 @@
 #include "graph.hh"
 
 #include <stdexcept>
+#include <iostream>
 
 /**
  * Return pointer to Vertex object.
@@ -12,10 +13,8 @@ ACO::Vertex& ACO::Graph::translateVertex(String& name)
 {
   if (verticesTranslator_.count(name) == 0)
   {
-    std::pair<std::string, Vertex> pair(name, Vertex(name, vertexId_++));
-    Vertex& v = verticesTranslator_.insert(pair).first->second;
-    vertices_.insert(&v);
-
+    Vertex& v = verticesTranslator_.insert(std::make_pair(name, Vertex(name, vertexId_++))).first->second;
+    vertices_.push_back(&v);
     return v;
   }
   else
@@ -40,9 +39,11 @@ ACO::Edge& ACO::Graph::addEdge(Vertex& v1, Vertex& v2, Distance distance)
   { // vertices allready connected
     throw std::runtime_error(e_edgeAlreadyDeclared);
   }
- 
-  edges_.push_back(Edge(edgeId_++, v1, v2, distance));
-  Edge& e = edges_.back();
+
+  std::pair<int, Edge> pair(edgeId_,Edge(edgeId_, v1, v2, distance));
+  edgeId_++;
+  Edge& e = edgesTranslator_.insert(pair).first->second;
+  edges_.push_back(&e);
   v1.addEdge(&e);
   v2.addEdge(&e);
   return e;
@@ -55,10 +56,10 @@ std::string ACO::Graph::serialize()
 {
   String res;
 
-  for (Edge& e : edges_)
+  for (Edge* e : edges_)
   { // add edges to result
-    res += e.getVertex1().getName() + " " + e.getVertex2().getName()
-      + " " + std::to_string(e.getDistance()) + "\n";
+    res += e->getVertex1().getName() + " " + e->getVertex2().getName()
+      + " " + std::to_string(e->getDistance()) + "\n";
   }
 
   return res;
@@ -72,4 +73,20 @@ ACO::Vertex* ACO::Graph::getRandomVertex()
 ACO::Edge* ACO::Graph::getRandomEdge()
 {
   return nullptr;
+}
+
+/**
+ * Checks whether for each vertex is defined edge to all other vertices
+ */
+bool ACO::Graph::checkCompletness()
+{
+  for (Vertex* v : vertices_)
+  {
+    if (v->getSizeEdges() != vertices_.size()-1)
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
