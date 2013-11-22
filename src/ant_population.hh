@@ -14,7 +14,7 @@ namespace ACO
 class ACO::AntPopulation
 {
 public: // private data types
-  typedef std::vector<Ant> Population;
+  typedef std::vector<Ant> Population; // TODO save to a map and makes pointers here
 
 private: // private constants
   std::string e_noMoreAnt = "No ants are available";

@@ -22,7 +22,7 @@ private: // private data memebers
 
 public: // constructor
   Edge(int id, Vertex& v1, Vertex& v2, Distance distance) : id_(id),
-    v1_(v1), v2_(v2), distance_(distance), pheromon_(0.0f) {}
+    v1_(v1), v2_(v2), distance_(distance), pheromon_(0.1f) {}
 
 public: // public methods
   Vertex& getSecondVertex(Vertex& v);

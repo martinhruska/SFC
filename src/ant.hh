@@ -4,19 +4,22 @@
 #include <vector>
 #include <unordered_set>
 #include <string>
+#include <cfloat>
 
 #include "aco_classes.hh"
 
 class ACO::Ant
 {
-private: // private data types
+public: // public data types
   typedef std::vector<Vertex *> Path;
+  typedef float PathCost;
+private: // private data types
   typedef std::unordered_set<Vertex *> Vertices;
   typedef std::unordered_set<Edge *> Edges;
-  typedef float PathCost;
 
 private: // private error messages
-  const std::string e_vertexAlreadyVisited = "Vertex has been already visited";
+  std::string e_vertexAlreadyVisited = "Vertex has been already visited";
+  std::string e_noBestEdge = "No best edge found";
 private: // private data members
   int id_;
   Vertex* actualVertex_;
@@ -35,12 +38,16 @@ public: // public methods
 
 private: // private methods
   void addVertexToVisited(Vertex* v);
+  float sumAllEdges(); // sum pheromon times distance for all edges
+  Edge* getBestEdge(float allEdges); // get edge with best probability to be chosen
 
 public: // getters
   int getId() {return id_;}
   const Vertices& getVisitedVertices() const {return visitedVertices_;}
   int getVisitedVerticesNumber() {return visitedVertices_.size();}
   bool isGoalSatisfied() {return goalSatisfied_;}
+  PathCost getPathCost() {return pathCost_;}
+  Path& getPath() {return path_;}
 
 public: // setters
   void setGoalStatisfied() {goalSatisfied_ = true;}
