@@ -83,6 +83,14 @@ int main(int argc, char** argv)
   ACOAlgorithm aco(ants, graph, RandomProvider(),
       parameters.getMaximalIterations());
   aco.compute();
+  Ant::Path path = aco.getResult();
+
+  for (Vertex* v : path)
+  {
+    std::cout << graph.getTranslationFromId(v->getId())  <<  " ";
+  }
+  std::cout << std::endl;
+
   // algorithm alone
   // get result
   // show result

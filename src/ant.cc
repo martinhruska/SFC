@@ -17,7 +17,6 @@ void ACO::Ant::makeStep()
 
   if (nextEdge == NULL)
   {
-  std::cerr << "Best edge is " << nextEdge << std::endl;
     throw new std::runtime_error(e_noBestEdge);
   }
  
@@ -45,7 +44,6 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges)
 
     // checks whether the edge is not the one with the highest probability
     float temp = ((1/edge->getDistance())*edge->getPheromon())/allEdges;
-  std::cerr << "Passed " << temp << std::endl;
     if (best <= temp)
     {
       best = temp;
@@ -71,10 +69,7 @@ float ACO::Ant::sumAllEdges()
       continue;
     }
 
-    std::cout << "edge: ";
-    std::cout << &edge << std::endl;
     res += (1/edge->getDistance())*edge->getPheromon();
-    std::cout << "distance get" << std::endl;
   }
 
   return res;

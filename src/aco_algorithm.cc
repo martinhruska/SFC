@@ -1,16 +1,45 @@
 #include "aco_algorithm.hh"
 
+#include <iostream>
+
 void ACO::ACOAlgorithm::compute()
 {
   setRandomVertices();
   createAntSolution();
+  saveBestPath();
   // save best
   // update pheromon
   // check iteration
 }
 
-void ACO::ACOAlgorithm::getResult(std::vector<Vertex>)
+
+/**
+ * Creates solution for each ant
+ */
+void ACO::ACOAlgorithm::createAntSolution()
 {
+  RawPopulation notFinishedAnts;
+  for (Ant& a : population_.getPopulation())
+  {
+    notFinishedAnts.push_back(&a);
+  }
+
+  while (notFinishedAnts.size() != 0)
+  {
+    Ant *ant = notFinishedAnts.back();
+    notFinishedAnts.pop_back();
+
+    ant->makeStep();
+    if (!isGoalReached(*ant))
+    { // ant does not satisfied goal
+      notFinishedAnts.insert(notFinishedAnts.begin(),ant);
+    }
+  }
+}
+
+ACO::ACOAlgorithm::Path& ACO::ACOAlgorithm::getResult()
+{
+  return bestPath_;
 }
 
 /**
@@ -52,35 +81,11 @@ void ACO::ACOAlgorithm::setRandomVertices()
 }
 
 /**
- * Creates solution for each ant
- */
-void ACO::ACOAlgorithm::createAntSolution()
-{
-  RawPopulation notFinishedAnts;
-  for (Ant& a : population_.getPopulation())
-  {
-    notFinishedAnts.push_back(&a);
-  }
-
-  while (notFinishedAnts.size() != 0)
-  {
-    Ant *ant = notFinishedAnts.back();
-    notFinishedAnts.pop_back();
-
-    ant->makeStep();
-    if (!isGoalReached(*ant))
-    { // ant does not satisfied goal
-      notFinishedAnts.insert(notFinishedAnts.begin(),ant);
-    }
-  }
-}
-
-/**
  * Check whether given ant reaches the goal
  */
 bool ACO::ACOAlgorithm::isGoalReached(Ant& ant)
 {
-  if (ant.getVisitedVerticesNumber() != graph_.getVerticesNumber()-1)
+  if (ant.getVisitedVerticesNumber() != graph_.getVerticesNumber())
   {
     return false;
   }

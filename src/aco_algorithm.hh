@@ -36,7 +36,7 @@ public: // constructors
 
 public: // public methods
   void compute();
-  void getResult(std::vector<Vertex>);
+  Path& getResult();
 
 private: // private methods
   void setRandomVertices();

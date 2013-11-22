@@ -26,6 +26,8 @@ private: // private constants
 
 private: // private data types
   typedef std::unordered_map<int, Edge> EdgesTranslator;
+  typedef std::unordered_map<String, Vertex> VerticesTranslator;
+  typedef std::unordered_map<int, String> VerticesBackTranslator;
   typedef std::vector<Edge *> Edges;
   typedef std::vector<Vertex *> Vertices;
 private: // private data members
@@ -35,7 +37,8 @@ private: // private data members
   Vertices vertices_;
   Edges edges_;
 
-  std::unordered_map<String, Vertex> verticesTranslator_;
+  VerticesTranslator verticesTranslator_;
+  VerticesBackTranslator verticesBackTranslator_;
   EdgesTranslator edgesTranslator_;
 
 public: // constructors
@@ -58,6 +61,7 @@ public: // public getters
   int getVerticesNumber() {return vertices_.size();}
   Vertex* getVertexAt(int position) {return vertices_.at(position);}
   const Vertices& getVertices() const {return vertices_;}
+  const String& getTranslationFromId(int id) const {return verticesBackTranslator_.at(id);}
 };
 
 #endif

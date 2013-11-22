@@ -12,8 +12,10 @@
 ACO::Vertex& ACO::Graph::translateVertex(String& name)
 {
   if (verticesTranslator_.count(name) == 0)
-  {
-    Vertex& v = verticesTranslator_.insert(std::make_pair(name, Vertex(name, vertexId_++))).first->second;
+  { // added verices to translator, backtranslator and to list of vertices
+    Vertex& v = verticesTranslator_.insert(std::make_pair(name, Vertex(name, vertexId_))).first->second;
+    verticesBackTranslator_.insert(std::make_pair(vertexId_, name));
+    vertexId_++;
     vertices_.push_back(&v);
     return v;
   }
