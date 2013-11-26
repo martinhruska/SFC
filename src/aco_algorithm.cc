@@ -4,12 +4,27 @@
 
 void ACO::ACOAlgorithm::compute()
 {
-  setRandomVertices();
-  createAntSolution();
-  saveBestPath();
-  // save best
-  // update pheromon
-  // check iteration
+  for (int i=0; i < maxIteration_; i++)
+  {
+    try
+    {
+      setRandomVertices();
+      createAntSolution();
+      saveBestPath();
+      updatePheromon();
+      restart();
+
+      for (Vertex* v : bestPath_)
+      {
+        std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
+      }
+      std::cout << std::endl;
+    } catch (std::runtime_error e)
+    {
+      std::cerr << "Internal error: " << e.what() << std::endl;
+      break;
+    }
+  }
 }
 
 
@@ -69,14 +84,49 @@ void ACO::ACOAlgorithm::saveBestPath()
 }
 
 /**
+ * Update pheromon on the edges when the solutions are built
+ */
+void ACO::ACOAlgorithm::updatePheromon()
+{
+  for (Edge* e : graph_.getEdges())
+  {
+    e->updatePheromon();
+  }
+    
+}
+
+/**
+ * Restart all ants and edges before next iteration
+ */
+void ACO::ACOAlgorithm::restart()
+{
+  for (Ant& a : population_.getPopulation())
+  {
+    a.restart();
+  }
+
+  for (Edge* e : graph_.getEdges())
+  {
+    e->restart();
+  }
+}
+
+/**
  * Put each ant on a random vertice.
  */
 void ACO::ACOAlgorithm::setRandomVertices()
 {
   for (Ant& ant : population_.getPopulation())
   {
-    int random = random_.getRandomNumberFromInterval(graph_.getVerticesNumber());
-    ant.setActualVertex(graph_.getVertexAt(random));
+    try
+    {
+      int random = random_.getRandomNumberFromInterval(graph_.getVerticesNumber());
+      ant.setActualVertex(graph_.getVertexAt(random));
+    } catch (std::runtime_error e)
+    {
+      continue;
+      throw e;
+    }
   }
 }
 
@@ -91,6 +141,7 @@ bool ACO::ACOAlgorithm::isGoalReached(Ant& ant)
   }
   else
   {
+    ant.returnToStart();
     return true;
   }
 }

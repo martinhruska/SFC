@@ -5,8 +5,17 @@
 
 #include <iostream>
 
+/**
+ * Restart ant before a next iteration
+ */
 void ACO::Ant::restart()
 {
+  actualVertex_ = NULL;
+  visitedVertices_.clear();
+  visitedEdges_.clear();
+  path_.clear();
+  pathCost_ = 0.0f;
+  goalSatisfied_ = false;
   return;
 }
 
@@ -17,9 +26,10 @@ void ACO::Ant::makeStep()
 
   if (nextEdge == NULL)
   {
-    throw new std::runtime_error(e_noBestEdge);
+    throw std::runtime_error(e_noBestEdge);
   }
  
+  nextEdge->addAnt(this);
   pathCost_ += nextEdge->getDistance();
   setActualVertex(&nextEdge->getSecondVertex(*actualVertex_));
   return;
@@ -52,6 +62,25 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges)
   }
 
   return bestEdge;
+}
+
+/**
+ * Returned to start city
+ */
+void ACO::Ant::returnToStart()
+{
+  Vertex* start = path_.front();
+  for (Edge *edge : actualVertex_->getEdges())
+  { // choose edge to start city
+    Vertex* v2 = &(edge->getSecondVertex(*actualVertex_));
+
+    if (*v2 == *start)
+    { // edge found, path cost increased
+      pathCost_ += edge->getDistance();
+      path_.push_back(start);
+      break;
+    }
+  }
 }
 
 /**
@@ -101,7 +130,7 @@ void ACO::Ant::addVertexToVisited(Vertex* v)
 {
   if (visitedVertices_.count(v) != 0)
   {
-    throw new std::runtime_error(e_vertexAlreadyVisited);
+    throw std::runtime_error(e_vertexAlreadyVisited);
   }
 
   visitedVertices_.insert(v);

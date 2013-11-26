@@ -35,6 +35,7 @@ public: // public constructors
 public: // public methods
   void makeStep();
   void restart();
+  void returnToStart();
 
 private: // private methods
   void addVertexToVisited(Vertex* v);

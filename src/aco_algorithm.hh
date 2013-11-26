@@ -43,6 +43,8 @@ private: // private methods
   void createAntSolution();
   bool isGoalReached(Ant& ant);
   void saveBestPath();
+  void updatePheromon();
+  void restart();
 };
 
 #endif

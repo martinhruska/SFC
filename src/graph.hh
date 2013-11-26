@@ -62,6 +62,7 @@ public: // public getters
   Vertex* getVertexAt(int position) {return vertices_.at(position);}
   const Vertices& getVertices() const {return vertices_;}
   const String& getTranslationFromId(int id) const {return verticesBackTranslator_.at(id);}
+  const Edges& getEdges() {return edges_;}
 };
 
 #endif

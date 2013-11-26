@@ -77,6 +77,11 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
+  if (parameters.getAntsNumber() <= 0)
+  {
+    std::cerr  <<  "Population of ants is to small"  <<  std::endl;
+    return EXIT_FAILURE;
+  }
   AntPopulation ants(parameters.getAntsNumber());
   std::cerr << "Population size is: " << ants.getPopulation().size() << std::endl;
  
