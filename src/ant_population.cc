@@ -1,7 +1,9 @@
 #include "ant_population.hh"
 
-ACO::AntPopulation::AntPopulation(int populationSize) :
-  antId_(0), populationSize_(populationSize), actAnt_(0)
+ACO::AntPopulation::AntPopulation(int populationSize,
+    float pheromonCoef, float distanceCoef) :
+  antId_(0), populationSize_(populationSize), actAnt_(0),
+  pheromonCoef_(pheromonCoef), distanceCoef_(distanceCoef)
 {
   populate();
 }
@@ -17,7 +19,7 @@ ACO::Ant& ACO::AntPopulation::getRandomAnt()
   }
 
   // later chose one random
-  return population_.back();
+  return *(population_.back());
 }
 
 /**
@@ -28,6 +30,10 @@ void ACO::AntPopulation::populate()
 {
   for (int i=0; i < populationSize_; i++)
   {
-    population_.push_back(Ant(antId_++));
+    Ant& a = populationMap_.insert(std::make_pair(antId_,
+          Ant(antId_, pheromonCoef_, distanceCoef_))). // ant initialization
+      first->second;
+    population_.push_back(&a);
+    antId_++;
   }
 }

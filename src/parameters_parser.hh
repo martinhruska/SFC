@@ -31,7 +31,13 @@ private: // private constant
   // option used twice
   String errorOptionUsed_ = "Option used twice";
   // error thrown due to wrong parameters
-  String errorMessage_ = "Error in parsing input";
+  String errorMessage_ = "Error in parsing parameters";
+  // Pheromon coeficient wrong format
+  String errorPheromon_ = "Pheromon coeficient must be float";
+  // Distance coeficient wrong format
+  String errorDistance_ = "Distance coeficient must be float";
+  // Wrong implementation
+  String errorImplementation_ = "Unknow implementation of ant system (-g parameter)";
 
   // expected number of parameters
   int EXPECTED_PARAMETERS_NUMBER = 7;

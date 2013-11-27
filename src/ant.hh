@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <string>
 #include <cfloat>
+#include <string>
 
 #include "aco_classes.hh"
 
@@ -28,9 +29,15 @@ private: // private data members
   Edges visitedEdges_;
   PathCost pathCost_;
   bool goalSatisfied_;
+  const float pheromonCoef_;
+  const float distanceCoef_;
 
 public: // public constructors
-  Ant(int id) : id_(id), actualVertex_(NULL), pathCost_(0), goalSatisfied_(false) {};
+  Ant(int id, float pheromonCoef, float distanceCoef) : id_(id), actualVertex_(NULL),
+    pathCost_(0), goalSatisfied_(false), pheromonCoef_(pheromonCoef),
+    distanceCoef_(distanceCoef)
+    {};
+
 
 public: // public methods
   void makeStep();
@@ -49,6 +56,7 @@ public: // getters
   bool isGoalSatisfied() {return goalSatisfied_;}
   PathCost getPathCost() {return pathCost_;}
   Path& getPath() {return path_;}
+  Vertex* getActualVertex() {return actualVertex_;}
 
 public: // setters
   void setGoalStatisfied() {goalSatisfied_ = true;}

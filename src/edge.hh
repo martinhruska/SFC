@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "aco_classes.hh"
+#include "as_implementation.hh"
 
 class ACO::Edge
 {
@@ -19,19 +20,21 @@ private: // private data memebers
   Distance distance_;
   Pheromon pheromon_;
   AntSet passedAnts_;
-  const float newPheromonCoef_;
+  const float pheromonConst_;
   const float evaporationCoef_;
 
 public: // constructor
-  Edge(int id, Vertex& v1, Vertex& v2, Distance distance) : id_(id),
-    v1_(v1), v2_(v2), distance_(distance), pheromon_(0.1f), newPheromonCoef_(3.0f),
-    evaporationCoef_(0.5f) {}
+  Edge(int id, Vertex& v1, Vertex& v2, Distance distance, float pheromonConst,
+      float evaporationCoef) : id_(id),
+    v1_(v1), v2_(v2), distance_(distance), pheromon_(0.1f),
+    pheromonConst_(pheromonConst), evaporationCoef_(evaporationCoef)
+  {}
 
 public: // public methods
   Vertex& getSecondVertex(Vertex& v);
   void addAnt(Ant *a) {passedAnts_.push_back(a);}
   void clearAnt() {passedAnts_.clear();}
-  void updatePheromon();
+  void updatePheromon(ASImplementation& as);
   void restart();
 
 public: // public getters

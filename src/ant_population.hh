@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "ant.hh"
 
@@ -14,7 +15,8 @@ namespace ACO
 class ACO::AntPopulation
 {
 public: // private data types
-  typedef std::vector<Ant> Population; // TODO save to a map and makes pointers here
+  typedef std::vector<Ant*> Population;
+  typedef std::unordered_map<int,Ant> PopulationMap;
 
 private: // private constants
   std::string e_noMoreAnt = "No ants are available";
@@ -24,13 +26,16 @@ public: // data members
   int populationSize_;
   int actAnt_;
   Population population_;
+  PopulationMap populationMap_;
+  const float pheromonCoef_; // weight of pheromon in ant step
+  const float distanceCoef_; // weight of distance in ant step
 
 public: // constructor
-  AntPopulation(int populationSize);
+  AntPopulation(int populationSize, float pheromonCoef, float distanceCoef);
 
 public: // public methods
   Ant& getRandomAnt();
-  Ant& getNextAnt() {return population_.at(actAnt_++);}
+  Ant& getNextAnt() {return *(population_.at(actAnt_++));}
 
 private: // private methods
   void populate();

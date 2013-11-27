@@ -1,6 +1,7 @@
 // standard libraries
 #include <stdexcept>
 #include <unordered_set>
+#include <iostream>
 
 // ACO libraries
 #include "graph_parser.hh"
@@ -88,6 +89,8 @@ void ACO::GraphParser::addTransitionToGraph(String& node1, String& node2,
   }
   catch (std::exception e)
   {
+    std::cerr << e_warning << std::endl <<
+      node1 << " " << node2 << " " << distance << std::endl;
     // edge has not been added
   }
 }

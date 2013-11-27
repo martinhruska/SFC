@@ -4,6 +4,7 @@
 #include "ant_population.hh"
 #include "graph.hh"
 #include "random_provider.hh"
+#include "as_implementation.hh"
 
 #include <cfloat>
 
@@ -27,16 +28,19 @@ private: // private data memebers
   int maxIteration_;
   PathCost bestPathCost_;
   Path bestPath_;
+  ASImplementation& as_;
 
 public: // constructors
-  ACOAlgorithm(AntPopulation population, Graph graph, RandomProvider random, int maxIter) :
+  ACOAlgorithm(AntPopulation population, Graph graph, RandomProvider random,
+      int maxIter, ASImplementation& as) :
     population_(population), graph_(graph), random_(random),
-    maxIteration_(maxIter), bestPathCost_(FLT_MAX)
+    maxIteration_(maxIter), bestPathCost_(FLT_MAX), as_(as)
   {}
 
 public: // public methods
   void compute();
   Path& getResult();
+  PathCost getPathCost() {return bestPathCost_;}
 
 private: // private methods
   void setRandomVertices();
@@ -45,6 +49,7 @@ private: // private methods
   void saveBestPath();
   void updatePheromon();
   void restart();
+  std::string printPath(Path path);
 };
 
 #endif

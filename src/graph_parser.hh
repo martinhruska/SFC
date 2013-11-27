@@ -21,6 +21,8 @@ private: // private data types
 private: // private constants
   const String e_cannotRead = "Cannot read given file";
   const String e_badFormat = "File had a wrong format: ";
+  const String e_warning =
+    "WARNING!!! This edge has already been defined (and this second definition will be ignored:";
 
 public: // public methods
   GraphParser() {}

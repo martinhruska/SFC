@@ -53,7 +53,8 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges)
     }
 
     // checks whether the edge is not the one with the highest probability
-    float temp = ((1/edge->getDistance())*edge->getPheromon())/allEdges;
+    float temp = ((distanceCoef_*(1/edge->getDistance()))*
+        (pheromonCoef_*edge->getPheromon()))/allEdges;
     if (best <= temp)
     {
       best = temp;
@@ -98,7 +99,8 @@ float ACO::Ant::sumAllEdges()
       continue;
     }
 
-    res += (1/edge->getDistance())*edge->getPheromon();
+    res += (distanceCoef_*(1/edge->getDistance()))*
+      (pheromonCoef_*edge->getPheromon());
   }
 
   return res;

@@ -42,7 +42,8 @@ ACO::Edge& ACO::Graph::addEdge(Vertex& v1, Vertex& v2, Distance distance)
     throw std::runtime_error(e_edgeAlreadyDeclared);
   }
 
-  std::pair<int, Edge> pair(edgeId_,Edge(edgeId_, v1, v2, distance));
+  std::pair<int, Edge> pair(edgeId_,
+      Edge(edgeId_, v1, v2, distance, pheromonConst_, evaporationCoef_));
   edgeId_++;
   Edge& e = edgesTranslator_.insert(pair).first->second;
   edges_.push_back(&e);

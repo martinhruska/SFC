@@ -18,7 +18,7 @@ void ACO::ACOAlgorithm::compute()
       {
         std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
       }
-      std::cout << std::endl;
+      std::cout << "Cost " << bestPathCost_ << std::endl;
     } catch (std::runtime_error e)
     {
       std::cerr << "Internal error: " << e.what() << std::endl;
@@ -34,9 +34,9 @@ void ACO::ACOAlgorithm::compute()
 void ACO::ACOAlgorithm::createAntSolution()
 {
   RawPopulation notFinishedAnts;
-  for (Ant& a : population_.getPopulation())
+  for (Ant* a : population_.getPopulation())
   {
-    notFinishedAnts.push_back(&a);
+    notFinishedAnts.push_back(a);
   }
 
   while (notFinishedAnts.size() != 0)
@@ -65,21 +65,23 @@ ACO::ACOAlgorithm::Path& ACO::ACOAlgorithm::getResult()
 void ACO::ACOAlgorithm::saveBestPath()
 {
   // init best path cost
-  Ant& bestAnt = population_.getPopulation().back();
+  Ant* bestAnt = population_.getPopulation().back();
 
-  for (Ant ant : population_.getPopulation())
+  for (Ant* ant : population_.getPopulation())
   { // get best solution from last iteration
-    if (ant.getPathCost() < bestAnt.getPathCost())
+    std::cerr << "Iteration ant " << ant->getId() << " " << printPath(ant->getPath()) << " with cost " << ant->getPathCost() << std::endl;
+    if (ant->getPathCost() < bestAnt->getPathCost())
     {
       bestAnt = ant;
     }
   }
 
-  if (bestAnt.getPathCost() < bestPathCost_)
+  std::cerr << "Iteration best " << printPath(bestAnt->getPath()) << " with cost " << bestAnt->getPathCost() << std::endl;
+  if (bestAnt->getPathCost() <= bestPathCost_)
   {
     bestPath_.clear();
-    bestPath_.insert(bestPath_.begin(),bestAnt.getPath().begin(),bestAnt.getPath().end());
-    bestPathCost_ = bestAnt.getPathCost();
+    bestPath_.insert(bestPath_.begin(),bestAnt->getPath().begin(),bestAnt->getPath().end());
+    bestPathCost_ = bestAnt->getPathCost();
   }
 }
 
@@ -88,11 +90,11 @@ void ACO::ACOAlgorithm::saveBestPath()
  */
 void ACO::ACOAlgorithm::updatePheromon()
 {
+  // move this to as implementation
   for (Edge* e : graph_.getEdges())
   {
-    e->updatePheromon();
+    e->updatePheromon(as_);
   }
-    
 }
 
 /**
@@ -100,9 +102,9 @@ void ACO::ACOAlgorithm::updatePheromon()
  */
 void ACO::ACOAlgorithm::restart()
 {
-  for (Ant& a : population_.getPopulation())
+  for (Ant* a : population_.getPopulation())
   {
-    a.restart();
+    a->restart();
   }
 
   for (Edge* e : graph_.getEdges())
@@ -116,15 +118,15 @@ void ACO::ACOAlgorithm::restart()
  */
 void ACO::ACOAlgorithm::setRandomVertices()
 {
-  for (Ant& ant : population_.getPopulation())
+  for (Ant* ant : population_.getPopulation())
   {
     try
     {
       int random = random_.getRandomNumberFromInterval(graph_.getVerticesNumber());
-      ant.setActualVertex(graph_.getVertexAt(random));
+      ant->setActualVertex(graph_.getVertexAt(random));
+      std::cout << "Ant " << ant->getId() << " " << "That is " << random << " city " << graph_.getTranslationFromId(ant->getActualVertex()->getId())  <<  std::endl;
     } catch (std::runtime_error e)
     {
-      continue;
       throw e;
     }
   }
@@ -144,4 +146,18 @@ bool ACO::ACOAlgorithm::isGoalReached(Ant& ant)
     ant.returnToStart();
     return true;
   }
+}
+
+/**
+ * Methods serialize path and its cost to string
+ */
+std::string ACO::ACOAlgorithm::printPath(Path path)
+{
+  std::string res="";
+  for (Vertex* v : path)
+  {
+    res += graph_.getTranslationFromId(v->getId()) + " ";
+  }
+
+  return res;
 }

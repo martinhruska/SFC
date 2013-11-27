@@ -44,10 +44,30 @@ void ParametersParser::parseParameters()
         {
           state = 3;
         }
-        else if (parameterRaw == "-c")
+        else if (parameterRaw == "-o")
         {
           state = 0;
           parameters_.setGraphComplete();
+        }
+        else if (parameterRaw == "-p")
+        {
+          state = 4;
+        }
+        else if (parameterRaw == "-d")
+        {
+          state = 5;
+        }
+        else if (parameterRaw == "-c")
+        {
+          state = 6;
+        }
+        else if (parameterRaw == "-e")
+        {
+          state = 7;
+        }
+        else if (parameterRaw == "-g")
+        {
+          state = 8;
         }
         else
         {
@@ -86,6 +106,69 @@ void ParametersParser::parseParameters()
         state = 0;
         break;
 
+      case(4): // set pheromon coeficient
+        try 
+        {
+          parameters_.setPheromonCoef(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorPheromon_);
+        }
+        state = 0;
+        break;
+      case(5): // set distance coeficient
+        try 
+        {
+          parameters_.setDistanceCoef(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorDistance_);
+        }
+        state = 0;
+        break;
+      case(6): // set pheromon constant
+        try 
+        {
+          parameters_.setPheromonConst(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorDistance_);
+        }
+        state = 0;
+        break;
+      case(7): // set pheromon constant
+        try 
+        {
+          parameters_.setPheromonEvaporCoef(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorDistance_);
+        }
+        state = 0;
+        break;
+      case(8): // set pheromon constant
+        if (parameterRaw == "default")
+        {
+          parameters_.setAsImpl(Parameters::AS_DEFAULT);
+        }
+        else if (parameterRaw == "density")
+        {
+          parameters_.setAsImpl(Parameters::AS_DENSITY);
+        }
+        else if (parameterRaw == "quantity")
+        {
+          parameters_.setAsImpl(Parameters::AS_QUANTITY);
+        }
+        else
+        {
+          throw std::runtime_error(errorImplementation_);
+        }
+        state = 0;
+        break;
       default:
         throw std::runtime_error(errorMessage_);
     }

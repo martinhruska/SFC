@@ -40,9 +40,16 @@ private: // private data members
   VerticesTranslator verticesTranslator_;
   VerticesBackTranslator verticesBackTranslator_;
   EdgesTranslator edgesTranslator_;
+  
+  // coeficients for edges
+  const float pheromonConst_;
+  const float evaporationCoef_;
 
 public: // constructors
-  Graph() : vertexId_(0), edgeId_(0) {};
+  Graph(float pheromonConst, float evaporationCoef) : vertexId_(0),
+    edgeId_(0), pheromonConst_(pheromonConst),
+    evaporationCoef_(evaporationCoef)
+  {};
 
 public: // public methods
   // Translates vertex from string to intern representation
