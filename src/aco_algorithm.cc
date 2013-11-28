@@ -35,7 +35,7 @@ void ACO::ACOAlgorithm::createAntSolution()
 {
   RawPopulation notFinishedAnts;
   for (Ant* a : population_.getPopulation())
-  {
+  { // initialization
     notFinishedAnts.push_back(a);
   }
 
@@ -44,10 +44,22 @@ void ACO::ACOAlgorithm::createAntSolution()
     Ant *ant = notFinishedAnts.back();
     notFinishedAnts.pop_back();
 
-    ant->makeStep();
+    try
+    {
+      ant->makeStep();
+    }
+    catch (std::runtime_error& e)
+    { // cannot make another step -> local extereme
+      continue;
+    }
+    
     if (!isGoalReached(*ant))
     { // ant does not satisfied goal
       notFinishedAnts.insert(notFinishedAnts.begin(),ant);
+    }
+    else
+    { // goal satisfied, ant goes back to the start
+      ant->returnToStart();
     }
   }
 }
@@ -70,11 +82,16 @@ void ACO::ACOAlgorithm::saveBestPath()
   for (Ant* ant : population_.getPopulation())
   { // get best solution from last iteration
     std::cerr << "Iteration ant " << ant->getId() << " " << printPath(ant->getPath()) << " with cost " << ant->getPathCost() << std::endl;
-    if (ant->getPathCost() < bestAnt->getPathCost())
+
+    if (isGoalReached(*ant) &&
+        ant->getPathCost() < bestAnt->getPathCost())
     {
       bestAnt = ant;
     }
   }
+
+  // saves best ant
+  bestAnt_ = bestAnt;
 
   std::cerr << "Iteration best " << printPath(bestAnt->getPath()) << " with cost " << bestAnt->getPathCost() << std::endl;
   if (bestAnt->getPathCost() <= bestPathCost_)
@@ -90,11 +107,10 @@ void ACO::ACOAlgorithm::saveBestPath()
  */
 void ACO::ACOAlgorithm::updatePheromon()
 {
-  // move this to as implementation
-  for (Edge* e : graph_.getEdges())
-  {
-    e->updatePheromon(as_);
-  }
+  as_.setBestPath(bestPath_);
+  as_.setBestPathCost(bestPathCost_);
+  as_.setBestAnt(bestAnt_);
+  as_.updatePheromon(graph_);
 }
 
 /**
@@ -143,7 +159,6 @@ bool ACO::ACOAlgorithm::isGoalReached(Ant& ant)
   }
   else
   {
-    ant.returnToStart();
     return true;
   }
 }

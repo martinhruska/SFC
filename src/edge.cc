@@ -3,6 +3,7 @@
 #include "ant.hh"
 
 #include <iostream>
+#include <algorithm>
 
 /**
  * Get the second vertex when the first one is
@@ -28,12 +29,27 @@ void ACO::Edge::updatePheromon(ASImplementation& as)
 {
   float sumDelta = 0.0f;
 
+  int i=1;
   for (Ant *a : passedAnts_)
   {
-    sumDelta += as.makeOneDelta(pheromonConst_, distance_, a->getPathCost());
+    sumDelta += as.makeOneDelta(pheromonConst_, distance_, a, i++);
   }
   // move to as implementation
   pheromon_ = (1-evaporationCoef_)*pheromon_ + sumDelta;
+  pheromon_ += as.getPheromonAddition(pheromonConst_, passedAnts_.size());
+  pheromon_ = as.maxMinCorrection(pheromon_);
+}
+
+/**
+ * Order ants passed through this edge by the quality
+ * of their solution
+ */
+void ACO::Edge::orderAnts()
+{
+  auto comp = [] (Ant* a1, Ant *a2) -> bool {
+      return a1->getPathCost() <= a2->getPathCost();};
+
+  std::sort(passedAnts_.begin(), passedAnts_.end(), comp);
 }
 
 /**

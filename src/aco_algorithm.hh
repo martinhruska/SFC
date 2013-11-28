@@ -28,13 +28,15 @@ private: // private data memebers
   int maxIteration_;
   PathCost bestPathCost_;
   Path bestPath_;
+  Ant* bestAnt_;
   ASImplementation& as_;
 
 public: // constructors
   ACOAlgorithm(AntPopulation population, Graph graph, RandomProvider random,
       int maxIter, ASImplementation& as) :
     population_(population), graph_(graph), random_(random),
-    maxIteration_(maxIter), bestPathCost_(FLT_MAX), as_(as)
+    maxIteration_(maxIter), bestPathCost_(FLT_MAX), bestAnt_(NULL),
+    as_(as)
   {}
 
 public: // public methods

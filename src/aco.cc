@@ -24,6 +24,9 @@
 #include "as_implementation.hh"
 #include "as_density.hh"
 #include "as_quantity.hh"
+#include "as_elitist.hh"
+#include "as_maxmin.hh"
+#include "as_ranked.hh"
 
 using namespace ACO;
 
@@ -62,6 +65,39 @@ void parseGraph(std::string pathInputFile, Graph& graph)
     throw std::runtime_error(e_FileRead);
   }
   graphParser.parseGraphFromFile(inputFile, graph);
+}
+
+ASImplementation* getAlgorithm(Parameters parameters)
+{
+  int parameter = parameters.getAsImpl();
+  if (parameter == Parameters::AS_DEFAULT)
+  {
+    return new ASImplementation();
+  }
+  else if (parameter == Parameters::AS_DENSITY)
+  {
+    return new ASDensity();
+  }
+  else if (parameter == Parameters::AS_QUANTITY)
+  {
+    return new ASQuantity();
+  }
+  else if (parameter == Parameters::AS_ELITIST)
+  {
+    return new ASElitist();
+  }
+  else if (parameter == Parameters::AS_MAXMIN)
+  {
+    return new ASMaxMin(parameters.getPheromonMax(),
+        parameters.getPheromonMin());
+  }
+  else if (parameter == Parameters::AS_RANKED)
+  {
+    return new ASRanked(parameters.getMaxAnts());
+  }
+
+  // default implementation
+  return new ASImplementation();
 }
 
 int main(int argc, char** argv)
@@ -109,19 +145,8 @@ int main(int argc, char** argv)
   std::cerr << "Population size is: " << ants.getPopulation().size() << std::endl;
  
   // computation alone
-  ASImplementation* as;
-  if (parameters.getAsImpl() == Parameters::AS_DEFAULT)
-  {
-    as = new ASImplementation();
-  }
-  else if (parameters.getAsImpl() == Parameters::AS_DENSITY)
-  {
-    as = new ASDensity();
-  }
-  else if (parameters.getAsImpl() == Parameters::AS_QUANTITY)
-  {
-    as = new ASQuantity();// ASQuantity();
-  }
+  ASImplementation* as = getAlgorithm(parameters);
+
   ACOAlgorithm aco(ants, graph, RandomProvider(),
       parameters.getMaximalIterations(), *as);
   aco.compute();
@@ -133,5 +158,6 @@ int main(int argc, char** argv)
   }
   std::cout << "Cost " << aco.getPathCost() << std::endl;
 
+  delete as;
   return EXIT_SUCCESS;
 }

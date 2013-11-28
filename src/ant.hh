@@ -48,6 +48,10 @@ private: // private methods
   void addVertexToVisited(Vertex* v);
   float sumAllEdges(); // sum pheromon times distance for all edges
   Edge* getBestEdge(float allEdges); // get edge with best probability to be chosen
+ 
+public: // operators
+  bool operator==(Ant& a) {return a.getId() == getId();}
+  bool operator!=(Ant& a) {return a.getId() != getId();}
 
 public: // getters
   int getId() {return id_;}

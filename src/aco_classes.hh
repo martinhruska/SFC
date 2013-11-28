@@ -7,6 +7,7 @@ namespace ACO
   class Ant;
   class Vertex;
   class Edge;
+  class Graph;
 }
 
 #endif

@@ -11,7 +11,7 @@ namespace ACO
 class ACO::ASDensity : public ACO::ASImplementation
 {
 public:
-  virtual float makeOneDelta(float pheromonConst, float distance, float pathCost);
+  virtual float makeOneDelta(float pheromonConst, float distance, Ant* ant, int order);
 };
 
 #endif

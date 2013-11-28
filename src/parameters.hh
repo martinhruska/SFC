@@ -35,16 +35,21 @@ private: // private data members
   float distanceCoef_; // distance weight
   float pheromonConst_; // pheromon constant
   float pheromonEvaporCoef_; // pheromon evaporation
+  float pheromonMin_; // minimal pheromon
+  float pheromonMax_; // maximal pheromon
+  int maxAnts_; // maximum of ants in ranked algorithm
   int asImpl_;
 
 public: // enum
-  enum asImpl{AS_DEFAULT, AS_DENSITY, AS_QUANTITY};
+  enum asImpl{AS_DEFAULT, AS_DENSITY, AS_QUANTITY, AS_ELITIST, AS_MAXMIN,
+  AS_RANKED};
 
 public: // public methods
   Parameters() :
     maxIterations_(MAX_DEFAULT_ITERATION), inputFile_(), graphComplete_(false),
     pheromonCoef_(1.0), distanceCoef_(1.0), pheromonConst_(1.0),
-    pheromonEvaporCoef_(1.0), asImpl_(AS_DEFAULT)
+    pheromonEvaporCoef_(1.0), pheromonMin_(-1.0), pheromonMax_(1.0), maxAnts_(1000),
+    asImpl_(AS_DEFAULT)
   {}
 
 public: // getters and setters
@@ -57,6 +62,9 @@ public: // getters and setters
   float getPheromonConst() {return pheromonConst_;}
   float getPheromonEvaporCoef() {return pheromonEvaporCoef_;}
   int getAsImpl() {return asImpl_;}
+  float getPheromonMax() {return pheromonMax_;}
+  float getPheromonMin() {return pheromonMin_;}
+  int getMaxAnts() {return maxAnts_;}
 
   void setMaximalIterations(int maxIterations) {maxIterations_ = maxIterations;}
   void setInputFile(String inputFile) {inputFile_ = inputFile;}
@@ -67,5 +75,8 @@ public: // getters and setters
   void setPheromonConst(float pherConst) {pheromonConst_ = pherConst;}
   void setPheromonEvaporCoef(float coef) {pheromonEvaporCoef_ = coef;}
   void setAsImpl(int asImpl) {asImpl_ = asImpl;}
+  void setPheromonMax(float max) {pheromonMax_ = max;}
+  void setPheromonMin(float min) {pheromonMin_ = min;}
+  void setMaxAnts(int max) {maxAnts_ = max;}
 };
 #endif

@@ -69,6 +69,18 @@ void ParametersParser::parseParameters()
         {
           state = 8;
         }
+        else if (parameterRaw == "-x")
+        {
+          state = 9;
+        }
+        else if (parameterRaw == "-n")
+        {
+          state = 10;
+        }
+        else if (parameterRaw == "-w")
+        {
+          state = 11;
+        }
         else
         {
           throw std::runtime_error(errorMessage_);
@@ -163,9 +175,54 @@ void ParametersParser::parseParameters()
         {
           parameters_.setAsImpl(Parameters::AS_QUANTITY);
         }
+        else if (parameterRaw == "elitist")
+        {
+          parameters_.setAsImpl(Parameters::AS_ELITIST);
+        }
+        else if (parameterRaw == "maxmin")
+        {
+          parameters_.setAsImpl(Parameters::AS_MAXMIN);
+        }
+        else if (parameterRaw == "ranked")
+        {
+          parameters_.setAsImpl(Parameters::AS_RANKED);
+        }
         else
         {
           throw std::runtime_error(errorImplementation_);
+        }
+        state = 0;
+        break;
+      case(9): // set pheromon coeficient
+        try 
+        {
+          parameters_.setPheromonMax(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorPheromon_);
+        }
+        state = 0;
+        break;
+      case(10): // set pheromon coeficient
+        try 
+        {
+          parameters_.setPheromonMin(stof(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorPheromon_);
+        }
+        state = 0;
+        break;
+      case(11): // set pheromon coeficient
+        try 
+        {
+          parameters_.setMaxAnts(stoi(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorPheromon_);
         }
         state = 0;
         break;
