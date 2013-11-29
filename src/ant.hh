@@ -8,6 +8,7 @@
 #include <string>
 
 #include "aco_classes.hh"
+#include "random_provider.hh"
 
 namespace ACO
 {
@@ -36,11 +37,14 @@ private: // private data members
   bool goalSatisfied_;
   const float pheromonCoef_;
   const float distanceCoef_;
+  RandomProvider random_;
+  bool randomChoice_; // random choice when more paths have same probability
 
 public: // public constructors
-  Ant(int id, float pheromonCoef, float distanceCoef) : id_(id), actualVertex_(NULL),
+  Ant(int id, float pheromonCoef, float distanceCoef, bool randomChoice = true) :
+    id_(id), actualVertex_(NULL),
     pathCost_(0), goalSatisfied_(false), pheromonCoef_(pheromonCoef),
-    distanceCoef_(distanceCoef)
+    distanceCoef_(distanceCoef), random_(), randomChoice_(randomChoice)
     {};
 
 
@@ -54,6 +58,7 @@ private: // private methods
   float sumAllEdges(); // sum pheromon times distance for all edges
   // get edge with best probability to be chosen
   Edge* getBestEdge(float allEdges, ASImplementation& as);
+  bool isNewBest(float best, float value);
  
 public: // operators
   bool operator==(Ant& a) {return a.getId() == getId();}

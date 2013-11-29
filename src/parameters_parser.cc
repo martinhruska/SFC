@@ -20,6 +20,7 @@ void ParametersParser::printHelp()
   std::cout << "  -c float ........ Constant of pheromon addition to the edges after one iteration" << std::endl;
   std::cout << "  -e float ........ Constant from interval <0,1> defines speed of evaporation of phermon" << std::endl;
   std::cout << "  -g string ....... Version on the ACO algorithm" << std::endl;
+  std::cout << "  -r .............. Turn on randomness in chosing path with the same probability" << std::endl;
   std::cout << "  Following version are available" << std::endl;
   std::cout << "    default ....... Default version of algorithm" << std::endl;
   std::cout << "    density ....... Ant-Density modification of ACO algorithm" << std::endl;
@@ -48,13 +49,12 @@ void ParametersParser::parseParameters()
   {
     // currently processed parameter
     String parameterRaw(parametersRaw_[i]);
-
     switch(state)
     {
       case(0):
         if (usedOptions.count(parameterRaw))
         { // options already used -> thrown used
-          throw std::runtime_error(errorMessage_);
+          throw std::runtime_error(errorOptionUsed_ + parameterRaw);
         }
 
         if (parameterRaw == "-h" || parameterRaw == "--help")
@@ -116,13 +116,19 @@ void ParametersParser::parseParameters()
         {
           state = 12;
         }
+        else if (parameterRaw == "-r")
+        {
+          parameters_.setRandom(false); 
+          state = 0;
+        }
         else if (parameterRaw == "-v")
         {
           parameters_.setVerbose(true);
+          state = 0;
         }
         else
         {
-          throw std::runtime_error(errorMessage_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
 
         usedOptions.insert(parameterRaw);
@@ -140,7 +146,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorMessage_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -152,7 +158,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorMessage_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -186,7 +192,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorDistance_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -197,7 +203,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorDistance_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -243,7 +249,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorPheromon_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -254,7 +260,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorPheromon_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -265,7 +271,7 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorPheromon_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
@@ -276,12 +282,12 @@ void ParametersParser::parseParameters()
         }
         catch (std::exception e)
         {
-          throw std::runtime_error(errorPheromon_);
+          throw std::runtime_error(errorMessage_ + parameterRaw);
         }
         state = 0;
         break;
       default:
-        throw std::runtime_error(errorMessage_);
+        throw std::runtime_error(errorMessage_ + parameterRaw);
     }
   }
 }

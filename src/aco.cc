@@ -71,6 +71,7 @@ void parseGraph(std::string pathInputFile, Graph& graph)
 ASImplementation* getAlgorithm(Parameters parameters)
 {
   int parameter = parameters.getAsImpl();
+
   if (parameter == Parameters::AS_DEFAULT)
   {
     return new ASImplementation();
@@ -159,9 +160,10 @@ int main(int argc, char** argv)
     std::cerr  <<  "Population of ants is to small"  <<  std::endl;
     return EXIT_FAILURE;
   }
+
   // generate ant population
   AntPopulation ants(parameters.getAntsNumber(), parameters.getPheromonCoef(),
-     parameters.getDistanceCoef());
+     parameters.getDistanceCoef(), parameters.isRandom());
   if (parameters.isVerbose())
   {
     std::cout << "Population size is: " << ants.getPopulation().size() << std::endl;
@@ -181,11 +183,19 @@ int main(int argc, char** argv)
   }
   Ant::Path path = aco.getResult();
 
-  for (Vertex* v : path)
-  { // print best path
-    std::cout << graph.getTranslationFromId(v->getId())  <<  " ";
+  std::cout  <<  "Final result: ";
+  if (path.size() == 0)
+  {
+    std::cout  <<  "Solution not found"  <<  std::endl;
   }
-  std::cout << "Cost " << aco.getPathCost() << std::endl;
+  else
+  {
+    for (Vertex* v : path)
+    { // print best path
+      std::cout << graph.getTranslationFromId(v->getId())  <<  " ";
+    }
+    std::cout << "Cost " << aco.getPathCost() << std::endl;
+  }
 
   delete as;
   return EXIT_SUCCESS;

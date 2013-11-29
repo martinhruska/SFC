@@ -7,6 +7,10 @@ void ACO::ACOAlgorithm::compute()
 {
   for (int i=0; i < maxIteration_; i++)
   {
+    if (verbose_)
+    {
+      std::cout << i+1 << ". iteration ===========================" << std::endl;
+    }
     try
     {
       setRandomVertices();
@@ -28,6 +32,10 @@ void ACO::ACOAlgorithm::compute()
     catch (std::runtime_error& e)
     {
       throw std::runtime_error("Internal error: "+std::string(e.what()));
+    }
+    if (verbose_)
+    {
+      std::cout <<"========================================" << std::endl << std::endl;
     }
   }
 }
@@ -56,14 +64,11 @@ void ACO::ACOAlgorithm::createAntSolution()
     }
     catch (std::runtime_error& e)
     { // cannot make another step -> local extereme
-      //std::cerr << "Ant " << ant->getId() << " is in local extreme because: " <<e.what() << std::endl;
       continue;
     }
     
-    //std::cerr << "Ant " << ant->getId() << " wants to continue\n";
     if (!isGoalReached(*ant))
     { // ant does not satisfied goal
-      //std::cerr << "Ant " << ant->getId() << " continues\n";
       notFinishedAnts.insert(notFinishedAnts.begin(),ant);
     }
     else
@@ -94,13 +99,18 @@ void ACO::ACOAlgorithm::saveBestPath()
     if (verbose_)
     {
       std::cout << "Iteration ant " << ant->getId() << " "
-        << printPath(ant->getPath()) << " with cost " << isPathComplete(*ant) << " "
-        << ant->getPathCost() << std::endl;
+        << printPath(ant->getPath()) << " with cost "
+        << ant->getPathCost() << " and goal satisfied: " << ant->isGoalSatisfied()
+        << std::endl;
     }
 
     if (ant->isGoalSatisfied() &&
         ant->getPathCost() < bestAnt->getPathCost())
     {
+      bestAnt = ant;
+    }
+    else if (ant->isGoalSatisfied() && !bestAnt->isGoalSatisfied())
+    { // first randomly chosen ant has not satisfied goal
       bestAnt = ant;
     }
   }
@@ -167,6 +177,7 @@ void ACO::ACOAlgorithm::setRandomVertices()
     {
       int random = random_.getRandomNumberFromInterval(graph_.getVerticesNumber());
       ant->setActualVertex(graph_.getVertexAt(random));
+      /*
       if (verbose_)
       {
         std::cout << "Ant " << ant->getId() << " " << "starts at " <<
@@ -175,6 +186,7 @@ void ACO::ACOAlgorithm::setRandomVertices()
           graph_.getTranslationFromId(ant->getActualVertex()->getId())
           <<  std::endl;
       }
+      */
     } catch (std::runtime_error e)
     {
       throw e;

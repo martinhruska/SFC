@@ -29,9 +29,11 @@ public: // data members
   PopulationMap populationMap_;
   const float pheromonCoef_; // weight of pheromon in ant step
   const float distanceCoef_; // weight of distance in ant step
+  bool randomChoice_; // random choice when more paths have same probability
 
 public: // constructor
-  AntPopulation(int populationSize, float pheromonCoef, float distanceCoef);
+  AntPopulation(int populationSize, float pheromonCoef, float distanceCoef,
+      bool randomChoice = true);
 
 public: // public methods
   Ant& getRandomAnt();

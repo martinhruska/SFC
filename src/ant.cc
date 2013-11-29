@@ -61,7 +61,7 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
         (pheromonCoef_*edge->getPheromon()));
     float temp = as.getEdgeProb(thisEdge, allEdges);
     //std::cerr << "best is " << thisEdge << " " << allEdges << " " <<temp << std::endl;
-    if (best <= temp)
+    if (isNewBest(best, temp))
     {
       best = temp;
       bestEdge = edge;
@@ -69,6 +69,20 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
   }
 
   return bestEdge;
+}
+
+bool ACO::Ant::isNewBest(float best, float value)
+{
+  if (randomChoice_)
+  {
+    int chose = random_.getRandomNumberFromInterval(2);
+    return ((chose == 0 && best <= value) || (chose == 1 && best < value));
+  }
+  else 
+  {
+    std::cerr << "tady" << std::endl;
+    return (best <= value);
+  }
 }
 
 /**

@@ -41,6 +41,7 @@ private: // private data members
   float randomConst_; // constant for acs algorithm
   bool helpPrinted_;
   bool verbose_;
+  bool randomChoice_;
   int asImpl_;
 
 public: // enum
@@ -52,7 +53,7 @@ public: // public methods
     maxIterations_(MAX_DEFAULT_ITERATION), inputFile_(), antsNumber_(10), graphComplete_(false),
     pheromonCoef_(1.0), distanceCoef_(1.0), pheromonConst_(1.0),
     pheromonEvaporCoef_(1.0), pheromonMin_(-1.0), pheromonMax_(1.0), maxAnts_(1000),
-    helpPrinted_(false), verbose_(false), asImpl_(AS_DEFAULT)
+    helpPrinted_(false), verbose_(false), randomChoice_(true), asImpl_(AS_DEFAULT)
   {}
 
 public: // getters and setters
@@ -71,6 +72,7 @@ public: // getters and setters
   float getRandomConst() {return randomConst_;}
   bool isHelp() {return helpPrinted_;}
   bool isVerbose() {return verbose_;}
+  bool isRandom() {return randomChoice_;}
 
   void setMaximalIterations(int maxIterations) {maxIterations_ = maxIterations;}
   void setInputFile(String inputFile) {inputFile_ = inputFile;}
@@ -87,5 +89,6 @@ public: // getters and setters
   void setRandomConst(float randomConst) {randomConst_ = randomConst;}
   void setHelpPrinted(bool printed) {helpPrinted_ = printed;}
   void setVerbose(bool verbose) {verbose_ = verbose;}
+  void setRandom(bool random) {randomChoice_ = random;}
 };
 #endif

@@ -29,9 +29,9 @@ private: // private constant
   // error thrown due to not enought parameters problem
   String errorNotEnoughParameters_ = "Not enough parameters";
   // option used twice
-  String errorOptionUsed_ = "Option used twice";
+  String errorOptionUsed_ = "Option used twice ";
   // error thrown due to wrong parameters
-  String errorMessage_ = "Error in parsing parameters";
+  String errorMessage_ = "Error in parsing parameters ";
   // Pheromon coeficient wrong format
   String errorPheromon_ = "Pheromon coeficient must be float";
   // Distance coeficient wrong format
