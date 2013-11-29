@@ -46,6 +46,7 @@ void ACO::ACOAlgorithm::createAntSolution()
 
     try
     {
+      as_.prepareStep();
       ant->makeStep(as_);
     }
     catch (std::runtime_error& e)

@@ -43,3 +43,8 @@ float ACO::ASImplementation::getEdgeProb(float thisEdge, float allEdges)
 {
   return thisEdge/allEdges;
 }
+
+void ACO::ASImplementation::prepareStep()
+{
+  return;
+}

@@ -36,6 +36,7 @@ public:
   virtual float maxMinCorrection(float pheromon);
 
   virtual float getEdgeProb(float thisEdge, float allEdges);
+  virtual void prepareStep();
 
 public: // settters
   void setBestPath(Path& path) {bestPath_ = path;}

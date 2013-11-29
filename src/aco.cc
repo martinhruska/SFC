@@ -27,6 +27,7 @@
 #include "as_elitist.hh"
 #include "as_maxmin.hh"
 #include "as_ranked.hh"
+#include "as_acs.hh"
 
 using namespace ACO;
 
@@ -97,7 +98,7 @@ ASImplementation* getAlgorithm(Parameters parameters)
   }
   else if (parameter == Parameters::AS_ACS)
   {
-//    return new ASAcs(parameters.getRandomConst());
+    return new ASAcs(parameters.getRandomConst(), RandomProvider());
   }
 
   // default implementation

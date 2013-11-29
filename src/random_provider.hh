@@ -1,5 +1,5 @@
 #ifndef ACO_RANDOM_PROVIDER
-#define ACO_RANDOM_PROVDIER
+#define ACO_RANDOM_PROVIDER
 
 namespace ACO
 {
