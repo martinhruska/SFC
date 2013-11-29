@@ -52,7 +52,7 @@ public: // public methods
   Parameters() :
     maxIterations_(MAX_DEFAULT_ITERATION), inputFile_(), antsNumber_(10), graphComplete_(false),
     pheromonCoef_(1.0), distanceCoef_(1.0), pheromonConst_(1.0),
-    pheromonEvaporCoef_(1.0), pheromonMin_(-1.0), pheromonMax_(1.0), maxAnts_(1000),
+    pheromonEvaporCoef_(0.5), pheromonMin_(-1.0), pheromonMax_(1.0), maxAnts_(1000),
     helpPrinted_(false), verbose_(false), randomChoice_(true), asImpl_(AS_DEFAULT)
   {}
 
