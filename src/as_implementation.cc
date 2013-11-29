@@ -38,3 +38,8 @@ float ACO::ASImplementation::maxMinCorrection(float pheromon)
 {
   return pheromon;
 }
+
+float ACO::ASImplementation::getEdgeProb(float thisEdge, float allEdges)
+{
+  return thisEdge/allEdges;
+}

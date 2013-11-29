@@ -38,11 +38,12 @@ private: // private data members
   float pheromonMin_; // minimal pheromon
   float pheromonMax_; // maximal pheromon
   int maxAnts_; // maximum of ants in ranked algorithm
+  float randomConst_; // constant for acs algorithm
   int asImpl_;
 
 public: // enum
   enum asImpl{AS_DEFAULT, AS_DENSITY, AS_QUANTITY, AS_ELITIST, AS_MAXMIN,
-  AS_RANKED};
+  AS_RANKED, AS_ACS};
 
 public: // public methods
   Parameters() :
@@ -65,6 +66,7 @@ public: // getters and setters
   float getPheromonMax() {return pheromonMax_;}
   float getPheromonMin() {return pheromonMin_;}
   int getMaxAnts() {return maxAnts_;}
+  float getRandomConst() {return randomConst_;}
 
   void setMaximalIterations(int maxIterations) {maxIterations_ = maxIterations;}
   void setInputFile(String inputFile) {inputFile_ = inputFile;}
@@ -78,5 +80,6 @@ public: // getters and setters
   void setPheromonMax(float max) {pheromonMax_ = max;}
   void setPheromonMin(float min) {pheromonMin_ = min;}
   void setMaxAnts(int max) {maxAnts_ = max;}
+  void setRandomConst(float randomConst) {randomConst_ = randomConst;}
 };
 #endif

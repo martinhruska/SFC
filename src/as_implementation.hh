@@ -35,6 +35,8 @@ public:
   virtual void updatePheromon(Graph& graph);
   virtual float maxMinCorrection(float pheromon);
 
+  virtual float getEdgeProb(float thisEdge, float allEdges);
+
 public: // settters
   void setBestPath(Path& path) {bestPath_ = path;}
   void setBestPathCost(PathCost cost) {bestPathCost_ = cost;}

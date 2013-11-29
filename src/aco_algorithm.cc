@@ -46,7 +46,7 @@ void ACO::ACOAlgorithm::createAntSolution()
 
     try
     {
-      ant->makeStep();
+      ant->makeStep(as_);
     }
     catch (std::runtime_error& e)
     { // cannot make another step -> local extereme

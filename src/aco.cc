@@ -95,6 +95,10 @@ ASImplementation* getAlgorithm(Parameters parameters)
   {
     return new ASRanked(parameters.getMaxAnts());
   }
+  else if (parameter == Parameters::AS_ACS)
+  {
+//    return new ASAcs(parameters.getRandomConst());
+  }
 
   // default implementation
   return new ASImplementation();

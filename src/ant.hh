@@ -9,6 +9,11 @@
 
 #include "aco_classes.hh"
 
+namespace ACO
+{
+  class ASImplementation;
+}
+
 class ACO::Ant
 {
 public: // public data types
@@ -40,14 +45,15 @@ public: // public constructors
 
 
 public: // public methods
-  void makeStep();
+  void makeStep(ASImplementation& as);
   void restart();
   void returnToStart();
 
 private: // private methods
   void addVertexToVisited(Vertex* v);
   float sumAllEdges(); // sum pheromon times distance for all edges
-  Edge* getBestEdge(float allEdges); // get edge with best probability to be chosen
+  // get edge with best probability to be chosen
+  Edge* getBestEdge(float allEdges, ASImplementation& as);
  
 public: // operators
   bool operator==(Ant& a) {return a.getId() == getId();}

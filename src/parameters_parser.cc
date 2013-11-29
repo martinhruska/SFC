@@ -81,6 +81,10 @@ void ParametersParser::parseParameters()
         {
           state = 11;
         }
+        else if (parameterRaw == "-q")
+        {
+          state = 12;
+        }
         else
         {
           throw std::runtime_error(errorMessage_);
@@ -187,6 +191,10 @@ void ParametersParser::parseParameters()
         {
           parameters_.setAsImpl(Parameters::AS_RANKED);
         }
+        else if (parameterRaw == "acs")
+        {
+          parameters_.setAsImpl(Parameters::AS_ACS);
+        }
         else
         {
           throw std::runtime_error(errorImplementation_);
@@ -215,10 +223,21 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(11): // set pheromon coeficient
+      case(11): // set maximun ants number for ranked
         try 
         {
           parameters_.setMaxAnts(stoi(parameterRaw));
+        }
+        catch (std::exception e)
+        {
+          throw std::runtime_error(errorPheromon_);
+        }
+        state = 0;
+        break;
+      case(12): // set default const
+        try 
+        {
+          parameters_.setRandomConst(stof(parameterRaw));
         }
         catch (std::exception e)
         {

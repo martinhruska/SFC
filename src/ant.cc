@@ -2,6 +2,7 @@
 
 #include "vertex.hh"
 #include "edge.hh"
+#include "as_implementation.hh"
 
 #include <iostream>
 
@@ -19,10 +20,10 @@ void ACO::Ant::restart()
   return;
 }
 
-void ACO::Ant::makeStep()
+void ACO::Ant::makeStep(ASImplementation& as)
 {
   float allEdges = sumAllEdges();
-  Edge* nextEdge = getBestEdge(allEdges);
+  Edge* nextEdge = getBestEdge(allEdges, as);
 
   if (nextEdge == NULL)
   {
@@ -39,7 +40,7 @@ void ACO::Ant::makeStep()
  * Computes which edge has the highest probability to be chosen
  * as the next edge for this ant
  */
-ACO::Edge* ACO::Ant::getBestEdge(float allEdges)
+ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
 {
   float best = -1;
   Edge* bestEdge = NULL;
@@ -53,8 +54,9 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges)
     }
 
     // checks whether the edge is not the one with the highest probability
-    float temp = ((distanceCoef_*(1/edge->getDistance()))*
-        (pheromonCoef_*edge->getPheromon()))/allEdges;
+    float thisEdge = ((distanceCoef_*(1/edge->getDistance()))*
+        (pheromonCoef_*edge->getPheromon()));
+    float temp = as.getEdgeProb(thisEdge, allEdges);
     if (best <= temp)
     {
       best = temp;
