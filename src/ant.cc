@@ -5,6 +5,7 @@
 #include "as_implementation.hh"
 
 #include <iostream>
+#include <cmath>
 
 /**
  * Restart ant before a next iteration
@@ -54,8 +55,8 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
     }
 
     // checks whether the edge is not the one with the highest probability
-    float thisEdge = ((distanceCoef_*(1/edge->getDistance()))*
-        (pheromonCoef_*edge->getPheromon()));
+    float thisEdge = pow(1/edge->getDistance(),distanceCoef_)*
+        pow(edge->getPheromon(),pheromonCoef_);
     float temp = as.getEdgeProb(thisEdge, allEdges);
     if (isNewBest(best, temp))
     {
@@ -114,8 +115,8 @@ float ACO::Ant::sumAllEdges()
       continue;
     }
 
-    res += (distanceCoef_*(1/edge->getDistance()))*
-      (pheromonCoef_*edge->getPheromon());
+    res += pow(1/edge->getDistance(),distanceCoef_)*
+      pow(edge->getPheromon(),pheromonCoef_);
   }
 
   return res;
