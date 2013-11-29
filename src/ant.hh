@@ -62,14 +62,14 @@ public: // operators
 public: // getters
   int getId() {return id_;}
   const Vertices& getVisitedVertices() const {return visitedVertices_;}
-  int getVisitedVerticesNumber() {return visitedVertices_.size();}
+  unsigned int getVisitedVerticesNumber() {return visitedVertices_.size();}
   bool isGoalSatisfied() {return goalSatisfied_;}
   PathCost getPathCost() {return pathCost_;}
   Path& getPath() {return path_;}
   Vertex* getActualVertex() {return actualVertex_;}
 
 public: // setters
-  void setGoalStatisfied() {goalSatisfied_ = true;}
+  void setGoalStatisfied(bool goal) {goalSatisfied_ = goal;}
   void setActualVertex(Vertex* v);
 };
 #endif

@@ -45,11 +45,14 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
   float best = -1;
   Edge* bestEdge = NULL;
 
+  //std::cerr << "visited " << visitedVertices_.size() << std::endl;
   for (Edge *edge : actualVertex_->getEdges())
   {
+    //std::cerr << "visited tries" << std::endl;
     Vertex* v2 = &(edge->getSecondVertex(*actualVertex_));
     if (visitedVertices_.count(v2) != 0)
     {
+      //std::cerr << "nope" << std::endl;
       continue;
     }
 
@@ -57,6 +60,7 @@ ACO::Edge* ACO::Ant::getBestEdge(float allEdges, ASImplementation& as)
     float thisEdge = ((distanceCoef_*(1/edge->getDistance()))*
         (pheromonCoef_*edge->getPheromon()));
     float temp = as.getEdgeProb(thisEdge, allEdges);
+    //std::cerr << "best is " << thisEdge << " " << allEdges << " " <<temp << std::endl;
     if (best <= temp)
     {
       best = temp;

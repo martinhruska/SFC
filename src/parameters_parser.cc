@@ -8,17 +8,17 @@ using ACO::ParametersParser;
 
 void ParametersParser::printHelp()
 {
-  std::cout << "USAGE: aco -i file -a value -m value [options]" << std::endl;
+  std::cout << "USAGE: aco -i file [options]" << std::endl;
   std::cout << "OPTIONS (compulsory):" << std::endl;
   std::cout << "  -i file ......... A path to input file" << std::endl;
-  std::cout << "  -a integer ...... Value is integer defining number of the ants" << std::endl;
-  std::cout << "  -m integer ...... Value is integer defining number of the iteration of algorithm" << std::endl;
   std::cout << "OPTIONS (optional):" << std::endl;
   std::cout << "  -v .............. Make program verbose" << std::endl;
+  std::cout << "  -a integer ...... Value is integer defining number of the ants" << std::endl;
+  std::cout << "  -m integer ...... Value is integer defining number of the iteration of algorithm" << std::endl;
   std::cout << "  -p float ........ Weight of pheromon on an edge for chosing another vertex in an ant solutin." << std::endl;
   std::cout << "  -d float ........ Weight of distance of a an edge for chosing another vertex in an ant solutin." << std::endl;
   std::cout << "  -c float ........ Constant of pheromon addition to the edges after one iteration" << std::endl;
-  std::cout << "  -e float ........ Constant defines speed of evaporation of phermon" << std::endl;
+  std::cout << "  -e float ........ Constant from interval <0,1> defines speed of evaporation of phermon" << std::endl;
   std::cout << "  -g string ....... Version on the ACO algorithm" << std::endl;
   std::cout << "  Following version are available" << std::endl;
   std::cout << "    default ....... Default version of algorithm" << std::endl;
@@ -33,6 +33,7 @@ void ParametersParser::printHelp()
   std::cout << "    -n float ...... Minimal value of pheromon on an edge (MaxMin Ant System)" << std::endl;
   std::cout << "    -w int ........ Number of the best ants used for evaluation of the next pheromon level (Rank-based algorithm)" << std::endl;
   std::cout << "    -q float ...... Constant from interval <0,1> used for chosing method of creating ant solution (ACS algorithm)" << std::endl;
+  std::cout << "Please see documentation for the default values of parameters" << std::endl;
 }
 
 /**
@@ -40,11 +41,6 @@ void ParametersParser::printHelp()
  */
 void ParametersParser::parseParameters()
 {
-  if (parametersCount_ < EXPECTED_PARAMETERS_NUMBER)
-  {
-    throw std::runtime_error(errorNotEnoughParameters_);
-  }
-
   std::unordered_set<String> usedOptions;
 
   int state = 0; // starting state for parsing

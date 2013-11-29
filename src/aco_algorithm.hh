@@ -49,6 +49,7 @@ private: // private methods
   void setRandomVertices();
   void createAntSolution();
   bool isGoalReached(Ant& ant);
+  bool isPathComplete(Ant& ant);
   void saveBestPath();
   void updatePheromon();
   void restart();

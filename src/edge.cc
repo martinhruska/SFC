@@ -32,9 +32,12 @@ void ACO::Edge::updatePheromon(ASImplementation& as)
   int i=1;
   for (Ant *a : passedAnts_)
   {
+    if (!a->isGoalSatisfied())
+    {
+      continue;
+    }
     sumDelta += as.makeOneDelta(pheromonConst_, distance_, a, i++);
   }
-  // move to as implementation
   pheromon_ = (1-evaporationCoef_)*pheromon_ + sumDelta;
   pheromon_ += as.getPheromonAddition(pheromonConst_, passedAnts_.size());
   pheromon_ = as.maxMinCorrection(pheromon_);

@@ -9,7 +9,7 @@
 float ACO::ASMaxMin::makeOneDelta(float pheromonConst,
     float distance, Ant* ant, int order)
 {
-  if (*ant != *bestAnt_)
+  if (bestAnt_ == NULL || *ant != *bestAnt_)
   { // not best ant add no pheromon
     return 0;
   }
@@ -31,6 +31,9 @@ void ACO::ASMaxMin::updatePheromon(Graph& graph)
   }
 }
 
+/**
+ * Corrects maximal and minimal pheromon values on the edges
+ */
 float ACO::ASMaxMin::maxMinCorrection(float pheromon)
 {
   if (pheromon > pheromonMax_)

@@ -6,6 +6,10 @@ float ACO::ASAcs::getEdgeProb(float thisEdge, float allEdges)
 {
   if (actualRandom_ > randomConst_)
   {
+    if (allEdges == 0)
+    {
+      return 0;
+    }
     return thisEdge/allEdges;
   }
   return thisEdge;

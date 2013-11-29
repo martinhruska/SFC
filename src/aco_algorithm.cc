@@ -17,6 +17,7 @@ void ACO::ACOAlgorithm::compute()
 
       if (verbose_)
       {
+        std::cout << "Best all time: ";
         for (Vertex* v : bestPath_)
         {
          std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
@@ -55,16 +56,20 @@ void ACO::ACOAlgorithm::createAntSolution()
     }
     catch (std::runtime_error& e)
     { // cannot make another step -> local extereme
+      //std::cerr << "Ant " << ant->getId() << " is in local extreme because: " <<e.what() << std::endl;
       continue;
     }
     
+    //std::cerr << "Ant " << ant->getId() << " wants to continue\n";
     if (!isGoalReached(*ant))
     { // ant does not satisfied goal
+      //std::cerr << "Ant " << ant->getId() << " continues\n";
       notFinishedAnts.insert(notFinishedAnts.begin(),ant);
     }
     else
     { // goal satisfied, ant goes back to the start
       ant->returnToStart();
+      ant->setGoalStatisfied(isPathComplete(*ant));
     }
   }
 }
@@ -88,12 +93,12 @@ void ACO::ACOAlgorithm::saveBestPath()
   { // get best solution from last iteration
     if (verbose_)
     {
-      std::cerr << "Iteration ant " << ant->getId() << " "
-        << printPath(ant->getPath()) << " with cost "
+      std::cout << "Iteration ant " << ant->getId() << " "
+        << printPath(ant->getPath()) << " with cost " << isPathComplete(*ant) << " "
         << ant->getPathCost() << std::endl;
     }
 
-    if (isGoalReached(*ant) &&
+    if (ant->isGoalSatisfied() &&
         ant->getPathCost() < bestAnt->getPathCost())
     {
       bestAnt = ant;
@@ -101,7 +106,15 @@ void ACO::ACOAlgorithm::saveBestPath()
   }
 
   // saves best ant
-  bestAnt_ = bestAnt;
+  if (bestAnt->isGoalSatisfied())
+  {
+    bestAnt_ = bestAnt;
+  }
+  else
+  {
+    bestAnt_ = NULL;
+    return;
+  }
 
   if (verbose_)
   {
@@ -156,8 +169,9 @@ void ACO::ACOAlgorithm::setRandomVertices()
       ant->setActualVertex(graph_.getVertexAt(random));
       if (verbose_)
       {
-        std::cout << "Ant " << ant->getId() << " " << "That is " <<
-          random << " city " << 
+        std::cout << "Ant " << ant->getId() << " " << "starts at " <<
+          //random << " city " << 
+          "city " << 
           graph_.getTranslationFromId(ant->getActualVertex()->getId())
           <<  std::endl;
       }
@@ -169,11 +183,27 @@ void ACO::ACOAlgorithm::setRandomVertices()
 }
 
 /**
- * Check whether given ant reaches the goal
+ * Check whether given ant reaches the goal - visited all vertices
  */
 bool ACO::ACOAlgorithm::isGoalReached(Ant& ant)
 {
   if (ant.getVisitedVerticesNumber() != graph_.getVerticesNumber())
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
+}
+
+/**
+ * Check whether given ant completed path through graph - visited all vertices
+ * and returned to start vertex
+ */
+bool ACO::ACOAlgorithm::isPathComplete(Ant& ant)
+{
+  if (ant.getPath().size() != (graph_.getVerticesNumber()+1))
   {
     return false;
   }

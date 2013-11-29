@@ -65,7 +65,7 @@ public: // public methods
 
 public: // public getters
   int getEdgesNumber() {return edges_.size();}
-  int getVerticesNumber() {return vertices_.size();}
+  unsigned int getVerticesNumber() {return vertices_.size();}
   Vertex* getVertexAt(int position) {return vertices_.at(position);}
   const Vertices& getVertices() const {return vertices_;}
   const String& getTranslationFromId(int id) const {return verticesBackTranslator_.at(id);}

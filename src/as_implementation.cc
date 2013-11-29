@@ -41,6 +41,10 @@ float ACO::ASImplementation::maxMinCorrection(float pheromon)
 
 float ACO::ASImplementation::getEdgeProb(float thisEdge, float allEdges)
 {
+  if (allEdges == 0)
+  {
+    return 0;
+  }
   return thisEdge/allEdges;
 }
 
