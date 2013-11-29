@@ -118,11 +118,21 @@ int main(int argc, char** argv)
       e.what()  <<  std::endl;
     return EXIT_FAILURE;
   }
+
+  if (parameters.isHelp()) // help was printed, program ends
+  {
+    return EXIT_SUCCESS;
+  }
   
   Graph graph(parameters.getPheromonConst(), parameters.getPheromonEvaporCoef());
 
   try
   {// tries parse graph
+    if (parameters.getInputFile().size() == 0)
+    { // no input file
+      std::cerr  <<  "No input file is given. Read help for more information"  << std::endl;
+      return EXIT_FAILURE;
+    }
     parseGraph(parameters.getInputFile(), graph);
   }
   catch (std::runtime_error& e)
@@ -131,30 +141,44 @@ int main(int argc, char** argv)
       << std::endl;
     return EXIT_FAILURE;
   }
-  std::cerr << graph.serialize() << std::endl;
+  if (parameters.isVerbose())
+  {
+    std::cout << graph.serialize() << std::endl;
+  }
 
+  /*
   if (parameters.getGraphComplete() && !graph.checkCompletness())
   {
     std::cerr << "Graph is not complete"  << std::endl;
     return EXIT_FAILURE;
   }
+  */
 
   if (parameters.getAntsNumber() <= 0)
-  { // check number of ants
+  { // check number of ants. If there are no ants defined, it will end
     std::cerr  <<  "Population of ants is to small"  <<  std::endl;
     return EXIT_FAILURE;
   }
   // generate ant population
   AntPopulation ants(parameters.getAntsNumber(), parameters.getPheromonCoef(),
      parameters.getDistanceCoef());
-  std::cerr << "Population size is: " << ants.getPopulation().size() << std::endl;
+  if (parameters.isVerbose())
+  {
+    std::cout << "Population size is: " << ants.getPopulation().size() << std::endl;
+  }
  
   // computation alone
   ASImplementation* as = getAlgorithm(parameters);
-
   ACOAlgorithm aco(ants, graph, RandomProvider(),
-      parameters.getMaximalIterations(), *as);
-  aco.compute();
+      parameters.getMaximalIterations(), *as, parameters.isVerbose());
+  try
+  {
+    aco.compute(); // ACO algorithm
+  }
+  catch (std::runtime_error& e)
+  {
+    std::cerr  <<  e.what()  <<  std::endl;
+  }
   Ant::Path path = aco.getResult();
 
   for (Vertex* v : path)

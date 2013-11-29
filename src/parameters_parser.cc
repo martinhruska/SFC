@@ -6,6 +6,35 @@
 
 using ACO::ParametersParser;
 
+void ParametersParser::printHelp()
+{
+  std::cout << "USAGE: aco -i file -a value -m value [options]" << std::endl;
+  std::cout << "OPTIONS (compulsory):" << std::endl;
+  std::cout << "  -i file ......... A path to input file" << std::endl;
+  std::cout << "  -a integer ...... Value is integer defining number of the ants" << std::endl;
+  std::cout << "  -m integer ...... Value is integer defining number of the iteration of algorithm" << std::endl;
+  std::cout << "OPTIONS (optional):" << std::endl;
+  std::cout << "  -v .............. Make program verbose" << std::endl;
+  std::cout << "  -p float ........ Weight of pheromon on an edge for chosing another vertex in an ant solutin." << std::endl;
+  std::cout << "  -d float ........ Weight of distance of a an edge for chosing another vertex in an ant solutin." << std::endl;
+  std::cout << "  -c float ........ Constant of pheromon addition to the edges after one iteration" << std::endl;
+  std::cout << "  -e float ........ Constant defines speed of evaporation of phermon" << std::endl;
+  std::cout << "  -g string ....... Version on the ACO algorithm" << std::endl;
+  std::cout << "  Following version are available" << std::endl;
+  std::cout << "    default ....... Default version of algorithm" << std::endl;
+  std::cout << "    density ....... Ant-Density modification of ACO algorithm" << std::endl;
+  std::cout << "    quality ....... Ant-Quality version of ACO algorithm" << std::endl;
+  std::cout << "    elitist ....... Elitist version of ACO algorithm" << std::endl;
+  std::cout << "    acs ........... Ant Colony System version" << std::endl;
+  std::cout << "    maxmin ........ Maxmin Ant System version" << std::endl;
+  std::cout << "    ranked ........ Rank-base Ant System version" << std::endl;
+  std::cout << "  Following options are dependent on the chosen algorithm (they are ignored with the others algorithms)" << std::endl;
+  std::cout << "    -x float ...... Maximal value of pheromon on an edge (MaxMin Ant System)" << std::endl;
+  std::cout << "    -n float ...... Minimal value of pheromon on an edge (MaxMin Ant System)" << std::endl;
+  std::cout << "    -w int ........ Number of the best ants used for evaluation of the next pheromon level (Rank-based algorithm)" << std::endl;
+  std::cout << "    -q float ...... Constant from interval <0,1> used for chosing method of creating ant solution (ACS algorithm)" << std::endl;
+}
+
 /**
  * Parses the raw parameters to output structure
  */
@@ -32,7 +61,13 @@ void ParametersParser::parseParameters()
           throw std::runtime_error(errorMessage_);
         }
 
-        if (parameterRaw == "-i")
+        if (parameterRaw == "-h" || parameterRaw == "--help")
+        {
+          parameters_.setHelpPrinted(true);
+          printHelp();
+          return;
+        }
+        else if (parameterRaw == "-i")
         {
           state = 1;
         }
@@ -84,6 +119,10 @@ void ParametersParser::parseParameters()
         else if (parameterRaw == "-q")
         {
           state = 12;
+        }
+        else if (parameterRaw == "-v")
+        {
+          parameters_.setVerbose(true);
         }
         else
         {
@@ -155,7 +194,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(7): // set pheromon constant
+      case(7): // set pheromon evaporation coeficient
         try 
         {
           parameters_.setPheromonEvaporCoef(stof(parameterRaw));
@@ -166,7 +205,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(8): // set pheromon constant
+      case(8): // set aco algorithm
         if (parameterRaw == "default")
         {
           parameters_.setAsImpl(Parameters::AS_DEFAULT);
@@ -201,7 +240,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(9): // set pheromon coeficient
+      case(9): // set maximal pheromon value for maxmin alg
         try 
         {
           parameters_.setPheromonMax(stof(parameterRaw));
@@ -212,7 +251,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(10): // set pheromon coeficient
+      case(10): // set minimal pheromon value for maxmin alg
         try 
         {
           parameters_.setPheromonMin(stof(parameterRaw));
@@ -223,7 +262,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(11): // set maximun ants number for ranked
+      case(11): // set maximun ants number for ranked alg
         try 
         {
           parameters_.setMaxAnts(stoi(parameterRaw));
@@ -234,7 +273,7 @@ void ParametersParser::parseParameters()
         }
         state = 0;
         break;
-      case(12): // set default const
+      case(12): // set random constant for acs
         try 
         {
           parameters_.setRandomConst(stof(parameterRaw));

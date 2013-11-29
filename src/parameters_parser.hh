@@ -65,6 +65,9 @@ public: // public methods
    * Parses the raw parameters to output structure
    */
   void parseParameters();
+
+private: // private methods
+  void printHelp();
 };
 
 #endif

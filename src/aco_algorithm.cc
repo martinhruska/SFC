@@ -1,6 +1,7 @@
 #include "aco_algorithm.hh"
 
 #include <iostream>
+#include <string>
 
 void ACO::ACOAlgorithm::compute()
 {
@@ -14,15 +15,18 @@ void ACO::ACOAlgorithm::compute()
       updatePheromon();
       restart();
 
-      for (Vertex* v : bestPath_)
+      if (verbose_)
       {
-        std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
+        for (Vertex* v : bestPath_)
+        {
+         std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
+        }
+        std::cout << "Cost " << bestPathCost_ << std::endl;
       }
-      std::cout << "Cost " << bestPathCost_ << std::endl;
-    } catch (std::runtime_error e)
+    }
+    catch (std::runtime_error& e)
     {
-      std::cerr << "Internal error: " << e.what() << std::endl;
-      break;
+      throw std::runtime_error("Internal error: "+std::string(e.what()));
     }
   }
 }
@@ -82,7 +86,12 @@ void ACO::ACOAlgorithm::saveBestPath()
 
   for (Ant* ant : population_.getPopulation())
   { // get best solution from last iteration
-    std::cerr << "Iteration ant " << ant->getId() << " " << printPath(ant->getPath()) << " with cost " << ant->getPathCost() << std::endl;
+    if (verbose_)
+    {
+      std::cerr << "Iteration ant " << ant->getId() << " "
+        << printPath(ant->getPath()) << " with cost "
+        << ant->getPathCost() << std::endl;
+    }
 
     if (isGoalReached(*ant) &&
         ant->getPathCost() < bestAnt->getPathCost())
@@ -94,7 +103,11 @@ void ACO::ACOAlgorithm::saveBestPath()
   // saves best ant
   bestAnt_ = bestAnt;
 
-  std::cerr << "Iteration best " << printPath(bestAnt->getPath()) << " with cost " << bestAnt->getPathCost() << std::endl;
+  if (verbose_)
+  {
+    std::cout << "Iteration best " << printPath(bestAnt->getPath())
+      << " with cost " << bestAnt->getPathCost() << std::endl;
+  }
   if (bestAnt->getPathCost() <= bestPathCost_)
   {
     bestPath_.clear();
@@ -141,7 +154,13 @@ void ACO::ACOAlgorithm::setRandomVertices()
     {
       int random = random_.getRandomNumberFromInterval(graph_.getVerticesNumber());
       ant->setActualVertex(graph_.getVertexAt(random));
-      std::cout << "Ant " << ant->getId() << " " << "That is " << random << " city " << graph_.getTranslationFromId(ant->getActualVertex()->getId())  <<  std::endl;
+      if (verbose_)
+      {
+        std::cout << "Ant " << ant->getId() << " " << "That is " <<
+          random << " city " << 
+          graph_.getTranslationFromId(ant->getActualVertex()->getId())
+          <<  std::endl;
+      }
     } catch (std::runtime_error e)
     {
       throw e;
