@@ -1,0 +1,115 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[left=1.5cm, text={18cm, 25cm}, top=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\newcommand{\myuv}[1]{\quotedblbase #1\textquotedblleft}
+
+\title{Optimalizační algoritmus ACO, technická dokumentace}
+\author{Martin Hruška, xhrusk16@stud.fit.vutbr.cz}
+
+\date{}
+\begin{document}
+
+\maketitle
+
+\section{Úvod}
+\label{sec:intro}
+Ant colony optimization (ACO), neboli Optimalizace mravenčí kolonií je optimalizační algoritmus spadající do umělé inteligence,
+konkrétně patří mezi metody inteligence hejna. Algoritmus hledá optimální řešení pomocí vzájemně komunikujících agentů (umělých mravenců), kteří
+inkrementálně hledají nejlepší cestu grafem s~váženými hranami \cite{aco:main}. 
+Z~tohoto důvodu musí být optimalizační problém popsatelný právě váženým grafem, tudíž se metoda používá především pro řešení diskrétních problémů.
+
+Cílem této práce je vytvoření nástroje pro demonstraci činnosti ACO algoritmu, který umožní s~algoritmem experimentovat, zároveň bude jednoduše rozširitelný
+o~další modifikace algoritmu, ale již v~základní verzi bude implementovat více verzí algoritmu. Implementačním jazykem je C++ a je použit objektově orientovaný
+přístup pro zvýšení modifikovatelnosti a rozšiřitelnosti kódu. Nástroj má podobu aplikace s~rozhraním v~příkazové řádce.
+
+V~tomto dokumetu bude popsán samotný algoritmus \ref{sec:algorithm}, dále architektura aplikace \ref{sec:design},
+některé implementační detaily \ref{sec:implementation}, experimenty provedené s~algoritmem a jejich vyhodnocení \ref{sec:eval}.
+Součástí dokumentu jsou dvě přílohy obsahující uživatelskou příručku \ref{app:help} a popis formátu vstupního grafu \ref{app:format}.
+% neco o aco algoritmus, co je cilem teto prace - rozsiritelnost, lehka pouzitelnost a moznost experimentovani, osnovu
+
+\section{ACO Algoritmus}
+\label{sec:algorithm}
+% obecny popis, dat nejakou intuici, pripadne obrazek
+Jak bylo uvedeno v~úvodu \ref{sec:intro}, algoritmus pracuje s~množinou mravenců, kteří inkrementálně budují řešení daného optimalizačního problému tak, že
+hledají optimální cestu ve váženém grafu popisujícím daný problém. Za řešení úlohy považujme cestu procházející všemi vrcholy grafu právě jednou s~tím, že se
+mravenec nakonec cesty vrací do počátečního uzlu. Váhy hran grafu udávají vzdálenost vrcholů, které spojují. Každá hrana také má určitou hladinu feromonu, který
+vypouští mravenci při každém průchodu. Existují různé varianty ACO algoritmu, nyní bude ovšem posána jeho základní verze nazvaná Ant System.
+
+Řešení optimalizačního problému probíhá v~zadaném počtu iterací, při čemž v~každé iteraci vytvoří každý mravenec svoje řešení.
+Počáteční uzel, ze kterého každý mravenec začiná vytvářet cestu je vybrán náhodně.
+V~každém kroku tvorby řešení musí mravenec zvolit další hranu, po níž bude pokračovat do dalšího uzlu. Volba hrany záleží na vzdálenosti uzlů, které spojuje, a
+hladině feromonu na dané hraně. Ty určují pravděpodobnost, se kterou si mravenec vybere danou hranu dle následujícího vzorce:
+\begin{center}
+  $p(c_{ij}|s_k^p) =
+   \begin{cases} 
+      \frac{\tau^{\alpha}_{ij}\eta^{\beta}_{ij}}{\sum\limits_{c_{il}\in N(s_k^p)}{\tau^\alpha_{il}\eta^\beta_{il}}} & j \in N(s_k^p) \\
+      0 & otherwise 
+   \end{cases}
+   $
+\end{center}
+kde $c_{ij}$ je hrana z~uzlu $i$ do uzlu $j$, $s_k^p$ je částečné řešení mravence $k$, $N(s_k^p)$ je množina vrcholů nepatřících do $s_k^p$, $\eta_{ij}$ je 
+dáno vztem ($1/d_{ij}$), $d_{ij}$ je vzdálenost mezi uzly $i$ a $j$, $\tau_{ij}$ je hladina feromonu na hraně $c_{ij}$, $\alpha$ je váha feromonu na hraně
+a $\beta$ je váha vzdálenosti $i$ a $j$.
+
+Jakmile jsou řešení pro dané mravence hotova, najde se mravenec s~nejkvalitnějším řešním v~dané iteraci a pokud je toto lepší, než aktuálně nejlepší řešení
+z~doposud provedených iterací, tak je uloženo na jeho místo.
+
+Hladina feromonu je aktualizována na konci každé iterace a to tak, že mravenec vypouští po cestě, kterou prošel grafem, množství feromonu přímo uměrné kvalitě
+ním vytvořeného řešení. V~různých verzích algoritmu se technika aktualizace feromonu, množství feromonu vypouštěného mravencem, či počet mravenců vypouštějících 
+feromon může různit. V~popisované verzi Ant System je feromon na hraně z~vrcholu $i$ a $j$ aktualizován následujícím způsobem:
+\begin{center}
+  $\tau_{ij}=(1-\rho)\tau_{ij}+\sum\limits_{k=1}^{n}\Delta\tau_{ij}^k$
+\end{center}
+kde $\rho \in <0,1>$ je evaporační koeficient a $\Delta\tau_{ij}^k$ je množství fermon přidaný na hranu z~$i$ do $j$ $k$-tým mravencem a je definováno následovně:
+\begin{center}
+  $\Delta\tau_{ij}^k = 
+  \begin{cases}
+    \frac{Q}{L_k} & \emph{pokud je hrana } ij \emph{ v~řešení k-tého mravence}\\
+    0 & jinak
+   \end{cases}
+   $
+\end{center}
+kde $Q$ je konstanta udávající feromon vyloučený jedním mravence a $L_k$ je cena řešení (t.j. délka cesty) $k$-tého mravence.
+
+Algoritmus je prováděn, dokud není dosažen počet iterací zadaný uživatelem.
+
+
+\subsection{Modifikace}
+\label{subsec:modif}
+V předchozí částí byl popsán ACO algoritmus v jeho základní verzi -- Ant systemu. Existují ovšem modifikace tohoto přístupu, které spočívají především ve změně
+akutalizace feromonu na hranách. Některé z modifikací budou popsány v následujícím části dokumentu.
+% jake jsou rozsireni algoritmu
+\section{Návrh}
+\label{sec:design}
+% rozhozeni do trid, core tridy
+\subsection{Modularita}
+\label{subsec:modularity}
+% popsat moznost rozsireni, trade of obecnost/zbytecne parametry
+
+\section{Implementace}
+\label{sec:implementation}
+% implementace
+
+\section{Experimenty a vyhodnocení}
+\label{sec:eval}
+% popsat nejaky rozumny graf/nakreslit ho -> udelat graf vzadelnosti odchylek v zavislosti na poradi prochazky
+
+\section{Závěr}
+\label{sec:concl}
+% zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
+
+\appendix
+\section{Uživatelský manuál}
+\label{app:help}
+\section{Formát vstupního souboru}
+\label{app:format}
+
+\newpage
+\bibliography{literatura}
+\bibliographystyle{czplain}
+\end{document}
