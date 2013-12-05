@@ -9,13 +9,10 @@
  */
 void ACO::ASElitist::updatePheromon(Graph& graph)
 {
-  std::unordered_set<Vertex *> bestPathSet(bestPath_.begin(), bestPath_.end());
   for (Edge* e : graph.getEdges())
   {
-    if (bestPathSet.count(&e->getVertex1()) && bestPathSet.count(&e->getVertex2()))
-    {
+      currentEdge_ = e;
       e->updatePheromon(*this);
-    }
   }
 }
 
@@ -26,5 +23,12 @@ void ACO::ASElitist::updatePheromon(Graph& graph)
 float ACO::ASElitist::getPheromonAddition(const float pheromonConst,
     unsigned int antsNum)
 {
-  return antsNum*pheromonConst/bestPathCost_;
+  std::unordered_set<Vertex *> bestPathSet(bestPath_.begin(), bestPath_.end());
+  if (bestPathSet.count(&currentEdge_->getVertex1()) &&
+      bestPathSet.count(&currentEdge_->getVertex2()))
+  {
+    return antsNum*pheromonConst/bestPathCost_;
+  }
+
+  return 0;
 }

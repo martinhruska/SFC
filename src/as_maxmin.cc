@@ -21,7 +21,8 @@ float ACO::ASMaxMin::makeOneDelta(float pheromonConst,
  */
 void ACO::ASMaxMin::updatePheromon(Graph& graph)
 {
-  std::unordered_set<Vertex *> bestPathSet(bestPath_.begin(), bestPath_.end());
+  std::unordered_set<Vertex *> bestPathSet(bestAnt_->getPath().begin(),
+      bestAnt_->getPath().end());
   for (Edge* e : graph.getEdges())
   {
     if (bestPathSet.count(&e->getVertex1()) && bestPathSet.count(&e->getVertex2()))

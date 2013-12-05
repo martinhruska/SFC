@@ -78,11 +78,109 @@ kde $Q$ je konstanta udávající feromon vyloučený jedním mravence a $L_k$ j
 
 Algoritmus je prováděn, dokud není dosažen počet iterací zadaný uživatelem.
 
-
 \subsection{Modifikace}
 \label{subsec:modif}
-V předchozí částí byl popsán ACO algoritmus v jeho základní verzi -- Ant systemu. Existují ovšem modifikace tohoto přístupu, které spočívají především ve změně
-akutalizace feromonu na hranách. Některé z modifikací budou popsány v následujícím části dokumentu.
+V~předchozí částí byl popsán ACO algoritmus v~jeho základní verzi -- Ant System. Existují ovšem modifikace tohoto přístupu.
+V~následující části dokumentu budou popsány napřed modifikace Ant System algoritmu a to Ant Density, Ant Quality, Elitist Strategy, dále budou
+také uvedeny alternativní ACO algoritmy k~Ant System a to Ant Colony System, Max-Min System a Rank-based System.
+
+\subsubsection{Ant Density}
+Jedná se o~modifikaci Ant system, kde je hodnota $\Delta\tau_{ij}^k$ (množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) definována
+následovně \cite{aco:variations}:
+\begin{center}
+  $\Delta\tau_{ij}^k = 
+  \begin{cases}
+    Q & \emph{pokud je hrana } ij \emph{ v~řešení k-tého mravence}\\
+    0 & jinak
+   \end{cases}
+   $
+\end{center}
+
+\subsubsection{Ant Quality}
+Jde opět o~modifikaci Ant System upravující definici $\Delta\tau_{ij}^k$ (množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) na následující
+tvar \cite{aco:variations}:
+\begin{center}
+  $\Delta\tau_{ij}^k = 
+  \begin{cases}
+    Q/d_{ij} & \emph{pokud je hrana } ij \emph{ v~řešení k-tého mravence}\\
+    0 & jinak
+   \end{cases}
+   $
+\end{center}
+
+\subsubsection{Elitist Strategy}
+Elitist Strategy je další z~variací Ant System. Je založena na odlišné aktualizaci feromonové stopy na cestě, která je prozatím vybrána jako nejlepší.
+Hrany této cesty jsou aktualizovány dle následujícího vztahu\cite{aco:variations}:
+\begin{center}
+  $\tau_{ij}=(1-\rho)\tau_{ij}+\sum\limits_{k=1}^{n}\Delta\tau_{ij}^k + e*Q/L^*$
+\end{center}
+kde $e$ je počet mravenců, kteří prošli přes hranu $ij$ (která patří do nejkratší cesty), $L^{*}$ je délka nejlepší cesta.
+
+Hrany, které nepatří do nejlepší cesty, jsou aktualizovány dle vztahu uvedeného výše v~části \ref{sec:algorithm}.
+
+\subsubsection{Ant Colony System}
+Ant Colony System je po Ant System další algoritmus založený na ACO. Přístup k~aktualizaci feromonu na hranách zůstal zachován, ale byl změněn způsob
+výběru dalšího vrcholu, do kterého má pokračovat mravenec při tvorbě svého řešení v~dané iteraci. Výběr vrcholu $j$ pro daší cestu $k$-tého mravence
+je proveden následovně \cite{aco:acs}:
+\begin{center}
+  $j = 
+  \begin{cases}
+    \arg\max\limits_{u\in N(s^p_k)}\tau_{iu}\eta^{\beta}_{iu} & if\ q\leq q_0\\
+    \emph{Výběr dle pravděpodobnosti stejně jako v~AS} & jinak
+   \end{cases}
+   $
+\end{center}
+kde $q_0\in (0,1)$ je předem zadaný parametr a $q$ náhodné číslo generované pomocí uniformního rozložení z~intervalu $<0,1>$.
+
+\subsubsection{Max-Min Ant System}
+Max-Min Ant system je dalším ACO algoritmem. Od Ant System se odlišuje způsobem aktualizace feromonu na hranách a to tak, že feromon vypouští pouze
+nejlepší mravenec (označme ho \emph{best}). Aktualizace feromonu na hranách je pak prováděna následovně \cite{aco:maxmin}:
+\begin{center}
+  $\tau_{ij}=(1-\rho)\tau_{ij}+\Delta\tau_{ij}^{best}$
+\end{center}
+kde $\Delta\tau_{ij}^{best}=\frac{1}{L_{best}}$ a hrana $ij$ je v~nejlepší cestě dané iterace.
+
+Hodnota feromonu je pak upravene tak, že přesahuje-li předem danou maximální hranici, je na ni zmenšena. Symetricky toto platí pro minimální hranici. Formálně
+zapsáno \cite{aco:maxmin}:
+\begin{center}
+  $\tau_{ij} = 
+  \begin{cases}
+    \tau_{ij} & \tau_{min} \leq \tau_{ij} \leq \tau_{max}\\
+    \tau_{min} & \tau_{min} \geq \tau_{ij}\\
+    \tau_{max} & \tau_{max} \leq \tau_{ij}\\
+   \end{cases}
+   $
+\end{center}
+kde $\tau_{min}$ a $\tau_{max}$ jsou předem dané parametry určující minimální, respektive maximální možné hodnoty feromonu na hranách.
+
+\subsubsection{Rank-based Ant system}
+Ve variantě Rank-based Ant system provádí aktualizaci feromnu jen předem daný počet nejlepších mravenců, kteří jsou hodnoceny dle délky své cesty.
+Navíc je množství feromonu vypouštěného mravencem přímo uměrné kvalitě jeho cesty (t.j. mravenci s~kratší cestou vypouští víc feromonu). Je zřejmé,
+že pro účely tohoto algoritmu je nutné mravence seřadit dle délky jejich cesty, kde nejlepší bude nejkratší cesta. Aktualizace feromonu na hranách pak
+probíhá takto \cite{aco:ranked}:
+\begin{center}
+  $\tau_{ij}=(1-\rho)\tau_{ij}+\sum\limits_{k=1}^{\sigma-1}\Delta\tau_{ij}^k + \Delta\tau_{ij}^*$
+\end{center}
+  kde $\sigma$ je předem zadaný počet nejlepších mravenců, kteří budou vypouštět feromon, a $\Delta\tau_{ij}^k$ je definováno následovně
+\begin{center}
+  $\Delta\tau_{ij}^k = 
+ \begin{cases}
+  (\sigma - k)\frac{Q}{L_k} & \emph{pokud je hrana } ij \emph{ v~řešení k-tého mravence}\\
+  0 & jinak
+ \end{cases}
+$
+\end{center}
+a $\Delta\tau_{ij}^*$ takto:
+\begin{center}
+$\Delta\tau_{ij}^* = 
+ \begin{cases}
+  \sigma\frac{Q}{L^*} & \emph{pokud je hrana } ij \emph{ v~nejlepší cestě}\\
+  0 & jinak
+ \end{cases}
+   $
+\end{center}
+kde $L^*$ je cena nejlepší nalezené cesty.
+
 % jake jsou rozsireni algoritmu
 \section{Návrh}
 \label{sec:design}
@@ -111,5 +209,5 @@ akutalizace feromonu na hranách. Některé z modifikací budou popsány v násl
 
 \newpage
 \bibliography{literatura}
-\bibliographystyle{czplain}
+\bibliographystyle{czechiso}
 \end{document}
