@@ -314,15 +314,14 @@ implemetovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd 
     \end{itemize}
 \end{itemize}
 
-TODO
 \subsection{Upřesnění ACO algoritmu}
 Během implementace byly učiněny následující zpřesnění ACO algoritmu vůči popisu ze sekce \ref{sub:algorithm}.
 \begin{itemize}
-  \item Pokud během výběru dalšího uzlu při tvorbě řešení jednotlivých mravenců má více vrcholů stejnou pravděpodobnost výběru, tak je jeden z~nich vybrán náhodně.
-  Tím se předchází opakovanému procházení stejné cesty jen kvůli specifickému seřazení uzlů v~interní reprezentaci.
-  \item Jako vstup je akceptován i neúplný graf, tudíž může během tvorby řešení dospět některý z~mravenců do uzlu, z~něhož již nemá další cestu. Takovýto mravenec
+  \item Pokud během výběru dalšího uzlu při tvorbě řešení jednotlivých mravenců má více vrcholů stejnou pravděpodobnost výběru, tak je jeden z nich vybrán náhodně.
+  Tím se předchází opakovanému procházení stejné cesty jen kvůli specifickému seřazení uzlů v interní reprezentaci.
+  \item Jako vstup je akceptován i neúplný graf, tudíž může během tvorby řešení dospět některý z mravenců do uzlu, z něhož již nemá další cestu. Takovýto mravenec
   je po zbytek cesty ignorován a to včetně aktualizace feromonu na hranách.
-  \item S~předchozím bode souvisí také to, že pokud žádný mravenec nenalezne během zadaných iterací korektní řešení, může algoritmus skončit bez nalezení
+  \item S předchozím bode souvisí také to, že pokud žádný mravenec nenalezne během zadaných iterací korektní řešení, může algoritmus skončit bez nalezení
   řešení.
 \end{itemize}
 

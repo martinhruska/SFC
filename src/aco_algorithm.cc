@@ -26,7 +26,14 @@ void ACO::ACOAlgorithm::compute()
         {
          std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
         }
-        std::cout << "Cost " << bestPathCost_ << std::endl;
+        if (bestPathCost_ == FLT_MAX)
+        {
+          std::cout << "Solution not found" << std::endl;
+        }
+        else
+        {
+          std::cout << "Cost " << bestPathCost_ << std::endl;
+        }
       }
     }
     catch (std::runtime_error& e)
@@ -98,7 +105,7 @@ void ACO::ACOAlgorithm::saveBestPath()
   { // get best solution from last iteration
     if (verbose_)
     {
-      std::cout << "Iteration ant " << ant->getId() << " "
+      std::cout << "Ant " << ant->getId() << " "
         << printPath(ant->getPath()) << " with cost "
         << ant->getPathCost() << " and goal satisfied: " << ant->isGoalSatisfied()
         << std::endl;
