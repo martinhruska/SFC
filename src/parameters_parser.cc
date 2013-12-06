@@ -19,12 +19,12 @@ void ParametersParser::printHelp()
   std::cout << "  -d float ........ Weight of distance of a an edge for chosing another vertex in an ant solutin." << std::endl;
   std::cout << "  -c float ........ Constant of pheromon addition to the edges after one iteration" << std::endl;
   std::cout << "  -e float ........ Constant from interval <0,1> defines speed of evaporation of phermon" << std::endl;
+  std::cout << "  -r .............. Turn off randomness in chosing path with the same probability" << std::endl;
   std::cout << "  -g string ....... Version on the ACO algorithm" << std::endl;
-  std::cout << "  -r .............. Turn on randomness in chosing path with the same probability" << std::endl;
   std::cout << "  Following version are available" << std::endl;
   std::cout << "    default ....... Default version of algorithm" << std::endl;
   std::cout << "    density ....... Ant-Density modification of ACO algorithm" << std::endl;
-  std::cout << "    quality ....... Ant-Quality version of ACO algorithm" << std::endl;
+  std::cout << "    quantity ....... Ant-Quality version of ACO algorithm" << std::endl;
   std::cout << "    elitist ....... Elitist version of ACO algorithm" << std::endl;
   std::cout << "    acs ........... Ant Colony System version" << std::endl;
   std::cout << "    maxmin ........ Maxmin Ant System version" << std::endl;

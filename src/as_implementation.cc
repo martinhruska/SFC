@@ -39,6 +39,9 @@ float ACO::ASImplementation::maxMinCorrection(float pheromon)
   return pheromon;
 }
 
+/**
+ * Return the probability that ant will given edge (as parameter thisEdge)
+ */
 float ACO::ASImplementation::getEdgeProb(float thisEdge, float allEdges)
 {
   if (allEdges == 0)

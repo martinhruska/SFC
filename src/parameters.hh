@@ -24,7 +24,7 @@ class ACO::Parameters
 private: // private data types
   typedef std::string String;
 private: // private constants
-  const static int MAX_DEFAULT_ITERATION = 1000;
+  const static int MAX_DEFAULT_ITERATION = 100;
 
 private: // private data members
   int maxIterations_; // number of the maximal iterations
@@ -39,9 +39,9 @@ private: // private data members
   float pheromonMax_; // maximal pheromon
   int maxAnts_; // maximum of ants in ranked algorithm
   float randomConst_; // constant for acs algorithm
-  bool helpPrinted_;
-  bool verbose_;
-  bool randomChoice_;
+  bool helpPrinted_; // print help
+  bool verbose_; // be verbose
+  bool randomChoice_; // random choice with same prob
   int asImpl_;
 
 public: // enum
@@ -52,8 +52,9 @@ public: // public methods
   Parameters() :
     maxIterations_(MAX_DEFAULT_ITERATION), inputFile_(), antsNumber_(10), graphComplete_(false),
     pheromonCoef_(1.0), distanceCoef_(1.0), pheromonConst_(1.0),
-    pheromonEvaporCoef_(0.5), pheromonMin_(-1.0), pheromonMax_(1.0), maxAnts_(1000),
-    helpPrinted_(false), verbose_(false), randomChoice_(true), asImpl_(AS_DEFAULT)
+    pheromonEvaporCoef_(0.5), pheromonMin_(1.0), pheromonMax_(10.0), maxAnts_(10),
+    randomConst_(0.5), helpPrinted_(false), verbose_(false), randomChoice_(true),
+    asImpl_(AS_DEFAULT)
   {}
 
 public: // getters and setters

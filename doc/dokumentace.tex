@@ -8,9 +8,10 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \newcommand{\myuv}[1]{\quotedblbase #1\textquotedblleft}
+\newcommand{\defVal}[1]{$Default=#1$}
 
-\title{Optimalizační algoritmus ACO, technická dokumentace}
-\author{Martin Hruška, xhrusk16@stud.fit.vutbr.cz}
+\title{Optimalizační algoritmus ACO}
+\author{Martin Hruška\\xhrusk16@stud.fit.vutbr.cz}
 
 \date{}
 \begin{document}
@@ -82,7 +83,7 @@ Algoritmus je prováděn, dokud není dosažen počet iterací zadaný uživatel
 \subsection{Modifikace}
 \label{subsec:modif}
 V~předchozí částí byl popsán ACO algoritmus v~jeho základní verzi -- Ant System. Existují ovšem modifikace tohoto přístupu.
-V~následující části dokumentu budou popsány napřed modifikace Ant System algoritmu a to Ant Density, Ant Quality, Elitist Strategy, dále budou
+V~následující části dokumentu budou popsány napřed modifikace Ant System algoritmu a to Ant Density, Ant Quantity, Elitist Strategy, dále budou
 také uvedeny alternativní ACO algoritmy k~Ant System a to Ant Colony System, Max-Min System a Rank-based System.
 
 \subsubsection{Ant Density}
@@ -97,7 +98,7 @@ následovně \cite{aco:variations}:
    $
 \end{center}
 
-\subsubsection{Ant Quality}
+\subsubsection{Ant Quantity}
 Jde opět o~modifikaci Ant System upravující definici $\Delta\tau_{ij}^k$ (množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) na následující
 tvar \cite{aco:variations}:
 \begin{center}
@@ -154,7 +155,7 @@ zapsáno \cite{aco:maxmin}:
 \end{center}
 kde $\tau_{min}$ a $\tau_{max}$ jsou předem dané parametry určující minimální, respektive maximální možné hodnoty feromonu na hranách.
 
-\subsubsection{Rank-based Ant system}
+\subsubsection{Rank-based Ant System}
 Ve variantě Rank-based Ant system provádí aktualizaci feromnu jen předem daný počet nejlepších mravenců, kteří jsou hodnoceny dle délky své cesty.
 Navíc je množství feromonu vypouštěného mravencem přímo uměrné kvalitě jeho cesty (t.j. mravenci s~kratší cestou vypouští víc feromonu). Je zřejmé,
 že pro účely tohoto algoritmu je nutné mravence seřadit dle délky jejich cesty, kde nejlepší bude nejkratší cesta. Aktualizace feromonu na hranách pak
@@ -183,7 +184,7 @@ $\Delta\tau_{ij}^* =
 kde $L^*$ je cena nejlepší nalezené cesty.
 
 % jake jsou rozsireni algoritmu
-\section{Návrh}
+\section{Návrh a Implementace}
 \label{sec:design}
 Aplikace byla ve fázi návrhu rozčleněna do několika logických celků, jenž jsou rozděleny do tříd v~souladu s~metodologií
 objektově orientovaného návrhu. Základní logické rozčlenění aplikace, které bude dále popsáno podrobněji, je následující (viz. také obrázek
@@ -203,6 +204,7 @@ objektově orientovaného návrhu. Základní logické rozčlenění aplikace, k
 \caption{Základní logické rozčlenění aplikace}
 \label{img:logika}
 \end{figure}
+
 
 \subsection{Zpracování parametrů příkazového řádku}
 \label{subsec:process}
@@ -264,14 +266,68 @@ třídou \emph{Vertex}).
     \ref{sec:algorithm}), kterou reprezentuje, proto je třeba třídě v~konstruktoru předat také hodnoty příslušných parametrů potřebných pro tuto operaci.
   \end{itemize}
 \end{itemize}
-%populace mravencu
-%algoritmy - defaultni trida; rozsireni; nutnost obecnosti v parametrech -> aby bylo mozne delat vsechna rozsireni
 
-\subsection{Použité technologie}
-% c++ 11 bez externich knihoven
-\section{Implementace}
-\label{sec:implementation}
-% implementace
+\subsection{Populace mravenců}
+Základem ACO algoritmu je populace mravenců, kteří postupně tvoří optimální řešení daného problému. Pro prácí s~populací mravenců byly navrženy tyto dvě třídy:
+\begin{itemize}
+  \item Ant
+  \begin{itemize}
+    \item[] Třída popisující umělé mravence. Obsahuje metody pro výběr dalšího uzlu během tvorby řešení a také uchovává informace o~řešení tvořeném mravencem
+    v~aktuální iteraci.
+  \end{itemize}
+  \item AntPopulation
+  \begin{itemize}
+    \item[] Třída obsahuje jako datový člen množinu všech mravenců reprezentovaných objekty třídy \emph{Ant}. Umožňuje také populaci mravenců vygenerovat.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Implementace ACO algoritmů}
+Jak bylo popsáno v~části \ref{sec:algorithm}, existuje více algoritmů implementujících ACO meta-heruistiku.
+Aplikace implentuje všechny z~popsaných variant algoritmu. Implementaci algoritmu zastřešuje třída \emph{ACOAlgorithm} a jednotlivé varianty jsou pak
+implemetovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd realizujících ACO algoritmus bude následovat.
+
+\begin{itemize}
+  \item ACOAlgorithm
+  \begin{itemize}
+    \item[] Obsahuje jako svoje datové členy obsahuje všechny potřebné informace k~provedení algoritmu -- třídu
+    \emph{Graph}, třídu \emph{AntPopulation} a ukládá také nejlepší nalezenou cestu. Třída \emph{ACOAlgorithm} obaluje svými metodami všechny hlavní části obecného
+    ACO algoritmu, tedy vyvtoření řešení mravenci (metoda \emph{createAntSolution}), uložení nejlepší cesty (metoda \emph{saveBestPath}) 
+    a aktualizace feromonu (metoda \emph{updatePhermon}). Třída umožnuje také vypsat průběžné kroky algoritmu tak, aby byl demonstrován jeho průběh.
+
+    Dalším důležitým datovým členem této třídy je objekt představující instanci některé z~tříd implemetující Ant System, jeho modifikace, nebo alternativy jako
+    Ant Colony System, MaxMin Ant System atd. Tento objekt poskytuje metody pro aktualizaci feromonu na hranách a operace s~tím spojené,
+    či výpočtu pravděpodobnosti výběru dalšího uzlu v~cestě v~souladu s~odpovídající variantou ACO algoritmu.
+  \end{itemize}
+  \item Konkrétní implementace ACO
+    \item[] Aplikace poskytuje více implementací ACO. Základní třídou je ASImplementation, která implementuje Ant System v~jeho základní podobě. Tuto třídu
+    dědí ostatní třídy implementující jiné varianty ACO a případně pomocí polyformismu upravují ty části algoritmu, v~které se daná varianta liší. Implementovány
+    byly následující třídy:
+    \begin{itemize}
+      \item ASImplementation -- implementace základního Ant System. Implementuje všechny metody potřebné pro provedení algoritmu jako aktualizace feromonu na
+      hranách, či výběr následujícího uzlu v~cestě. Ostatní třídy tuto dědí a upravují metody tak, aby odpovídali jejich variantě.
+      \item ASDensity -- implementuje verzi Ant System density.
+      \item ASQuantity -- implementuje verzi Ant System quantity.
+      \item ASElitist -- implementuje elitářskou variantu Ant System.
+      \item ASAcs -- implentuje Ant Colony System.
+      \item ASMaxMin -- implementuje MaxMin Ant System.
+      \item ASRanked -- implementuje Rank-based Ant System.
+    \end{itemize}
+\end{itemize}
+
+TODO
+\subsection{Upřesnění ACO algoritmu}
+Během implementace byly učiněny následující zpřesnění ACO algoritmu vůči popisu ze sekce \ref{sub:algorithm}.
+\begin{itemize}
+  \item Pokud během výběru dalšího uzlu při tvorbě řešení jednotlivých mravenců má více vrcholů stejnou pravděpodobnost výběru, tak je jeden z~nich vybrán náhodně.
+  Tím se předchází opakovanému procházení stejné cesty jen kvůli specifickému seřazení uzlů v~interní reprezentaci.
+  \item Jako vstup je akceptován i neúplný graf, tudíž může během tvorby řešení dospět některý z~mravenců do uzlu, z~něhož již nemá další cestu. Takovýto mravenec
+  je po zbytek cesty ignorován a to včetně aktualizace feromonu na hranách.
+  \item S~předchozím bode souvisí také to, že pokud žádný mravenec nenalezne během zadaných iterací korektní řešení, může algoritmus skončit bez nalezení
+  řešení.
+\end{itemize}
+
+\subsection{Vývojové prostředí a nástroje}
+Implementace byla provedena v~jazyce C++ bez použítí externích knihoven. Program byl vyvíjen a testován na systému Linux (distribuce Debian Wheezy).
 
 \section{Experimenty a vyhodnocení}
 \label{sec:eval}
@@ -279,15 +335,76 @@ třídou \emph{Vertex}).
 
 \section{Závěr}
 \label{sec:concl}
-% zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
+Byla implemetována aplikace demonstrující činnost optimalizační meta-heuristiky Ant Colony Optimization. 
+Ta byla implementována v~základní variantě Ant System, některých
+jeho modifikacích, ve variantě Ant Colony System, MaxMin Ant System a Rank-based Ant System. Implementace byla provedena v~C++ s~použitím objektově orientovaného
+přístupu tak, aby by bylo snadné další rozšíření programu o~další varianty ACO.
 
+Program umožňuje vypisovat informace řešení v~každé iteraci, a tak demostruje jeho průběh. Behem testovani byly implementovany skripty umoznujici prevod techto
+Informaci do formatu vhodne pro vizualizaci techto dat. Aplikace byla testovana na nekolika grafech.
+
+% zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
+\newpage
 \appendix
 \section{Instalace}
+K~projektu je přiložen soubor \emph{Makefile}, tudíž lze zdrojové kódy zkompilovat pomocí příkazu \texttt{make}. Pro úspěšnou kompilaci je nutné mít
+nainstalovaný překladač GCC. Výstupem kompilace je spustitelný binární soubor \texttt{aco}.
 \label{app:install}
 \section{Uživatelský manuál}
+Program lze konfigurovat pomocí parametrů příkazového řádku při jeho spuštění následujícím způsobem ($Default$ v~popisu parametru udává základní hodnotu,
+která bude použita pokud parametr není uživatelem zadán):
+\\
+\\
+  aco -i soubor [parametry]
+  \begin{itemize}
+  \item Povinné parametry
+    \begin{itemize}
+      \item -i file ... Cesta k~vstupnímu souboru s~grafem
+    \end{itemize}
+  \end{itemize}
+  \begin{itemize}
+    \item Nepovinné parametry parametry
+    \begin{itemize}
+      \item -v ... Zapne výpisy o~činnosti algoritmu v~každé iteraci algoritmu
+      \item -a celé číslo ... Hodnota je počet mravenců v~populaci. \defVal{10}
+      \item -m celé číslo ... Počet iterací, které algoritmus provede. \defVal{100}
+      \item -p reálné číslo ...  Koeficient $\alpha$. \defVal{1.0}
+      \item -d reálné číslo ... Koeficient $\beta$. \defVal{1.0}
+      \item -c reálné číslo ... Konstanta $Q$. \defVal{1.0}
+      \item -e reálné číslo ... Koeficient $\rho$ z~intervalu <0,1>. \defVal{0.5}
+      \item -r ... Vypne náhodný výběr z~více vrcholů se stejnou pravděpodobností
+      \item -g řetězec ... Použitý ACO algoritmus. Parametr může mít následující hodnoty:
+      \begin{itemize}
+       \item default ... Základní verze Ant System. Použit jako základní hodnota parametru
+       \item density ... Ant System Density
+       \item quantity ... Ant System Quantity
+       \item elitist ... Ant System Elitist
+       \item acs .. Ant Colony System
+       \item maxmin ... Max-Min Ant System
+       \item ranked ... Rank-based Ant System
+      \end{itemize}
+      \item Následující parametry jsou závislé na zvoloném algoritmu. Pokud budou použity v~kombinaci s~jiným algoritmem, budou ignorovány.
+      \begin{itemize}
+        \item -x reálné číslo ... Maximální hodnota feromonu na hraně (Max-Min Ant System). \defVal{10.0}
+        \item -n reálné číslo ... Minimální hodnota feromonu na hraně (Max-Min Ant System). \defVal{1.0}
+        \item -w reálné číslo ... Počet nejlepších mravenců, kteří vypouští feromon (Rank-based Ant System). \defVal{10}
+        \item -q reálné číslo ... Konstanta $q_0$ z~intervalu <0,1> (Ant Colony System). \defVal{0.5}
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+Použité označení u~konstant a koeficientů odpovídá definici v~sekci \ref{sub:algorithm}.
+
+Program čeká jako vstup textový soubor s~popisem grafu, v~němž se bude hledat optimální cesta. Graf musí být popsán ve formátu definovaném 
+v~doplňku \ref{app:format}. Ve složce \emph{examples/} jsou příklady grafů, na kterých lze program testovat.
 \label{app:help}
 \section{Formát vstupního souboru}
 \label{app:format}
+Vstupní soubor bude obsahovat textový popis grafu takový, že na každém řádku bude definována jedna hrana grafu v~následujícím formátu:
+\begin{center}
+  \texttt{$X$ $Y$ $distance$}
+\end{center}
+kde $X$, $Y$ jsou vrcholy grafu a $distance$ je vzdálenost mezi nimi. Samotné vrcholy tedy není nutné explictně definovat. Pokud bude některá hrana
+definována vícekrát, je jako rozhodující brána první definice a ostatní jsou ignorovány. Program vypíše v~takovémto případu varování.
 
 \newpage
 \bibliography{literatura}
