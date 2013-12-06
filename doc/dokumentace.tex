@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{tikz}
 \newcommand{\myuv}[1]{\quotedblbase #1\textquotedblleft}
 
 \title{Optimalizační algoritmus ACO, technická dokumentace}
@@ -18,8 +19,8 @@
 
 \section{Úvod}
 \label{sec:intro}
-Ant colony optimization (ACO), neboli Optimalizace mravenčí kolonií je optimalizační algoritmus spadající do umělé inteligence,
-konkrétně patří mezi metody inteligence hejna. Algoritmus hledá optimální řešení pomocí vzájemně komunikujících agentů (umělých mravenců), kteří
+Ant colony optimization (ACO), neboli Optimalizace mravenčí kolonií je optimalizační meta-heuristika spadající do umělé inteligence,
+konkrétně patřící mezi metody inteligence hejna. Algoritmus hledá optimální řešení pomocí vzájemně komunikujících agentů (umělých mravenců), kteří
 inkrementálně hledají nejlepší cestu grafem s~váženými hranami \cite{aco:main}. 
 Z~tohoto důvodu musí být optimalizační problém popsatelný právě váženým grafem, tudíž se metoda používá především pro řešení diskrétních problémů.
 
@@ -184,11 +185,90 @@ kde $L^*$ je cena nejlepší nalezené cesty.
 % jake jsou rozsireni algoritmu
 \section{Návrh}
 \label{sec:design}
-% rozhozeni do trid, core tridy
-\subsection{Modularita}
-\label{subsec:modularity}
-% popsat moznost rozsireni, trade of obecnost/zbytecne parametry
+Aplikace byla ve fázi návrhu rozčleněna do několika logických celků, jenž jsou rozděleny do tříd v~souladu s~metodologií
+objektově orientovaného návrhu. Základní logické rozčlenění aplikace, které bude dále popsáno podrobněji, je následující (viz. také obrázek
+\ref{img:logika}):
+\begin{itemize}
+  \item Zpracování parametrů příkazového řádku
+  \item Zpracování vstupního souboru s~grafem
+  \item Interní reprezentace grafu
+  \item Generování a reprezentace mravenců
+  \item Implementace ACO algoritmu
+\end{itemize}
 
+\begin{figure}[b]
+  \begin{center}
+    \input{imgs/logic.tikz}
+  \end{center}
+\caption{Základní logické rozčlenění aplikace}
+\label{img:logika}
+\end{figure}
+
+\subsection{Zpracování parametrů příkazového řádku}
+\label{subsec:process}
+Parametry ACO algoritmu a další volby je možné nastavit prostřednictvím parametrů příkazového řádku. Jejich bližší popis lze nalézt v~doplňku \ref{app:help}.
+Pro zpracování těchto parametrů byly navrženy následující dvě třídy:
+\begin{itemize}
+  \item \emph{Parameters}
+  \begin{itemize}
+    \item[] Jako svoje datové členy uchovává hodnoty všech parametrů převedené do příslušných datových typů.
+    Obsahuje metody pro nastavení a získání hodnot jednotlivých parametrů.
+  \end{itemize}
+  \item \emph{ParametersParser}
+  \begin{itemize}
+    \item[] Postupně prochází jednotlivé parametry předané aplikaci, provádí jejich konverzi do příslušných datových typů a ukladá je do odpovídajících
+    datových členu třídy \emph{Parameters}.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Zpracování vstupního souboru s~grafem}
+Graf pro algoritmus ACO je programu předáván prostřednictvím textového souboru, v~němž je v~předem daném formátu (více informaci viz. doplněk \ref{app:format})
+posán graf. Pro jeho zpracování slouží tato třída:
+\begin{itemize}
+  \item \emph{GraphParser}
+  \begin{itemize}
+    \item[] Třída poskytuje metodu pro zpracování vstupu, která čte postupně vstupní soubor řádek po řádku a jednotlivé řádky převadí do interní reprezentace,
+    jež je popsána v~části \ref{subsec:graph}.
+  \end{itemize}
+\end{itemize}
+%parsovani grafu
+%graf
+
+\subsection{Interní reprezentace grafu}
+\label{subsec:graph}
+Graf je interně reprezentován pomocí třídy \emph{Graph}, která obsahuje seznam hran (reprezentovaných třídou \emph{Edge}) a seznam vrcholů (reprezentovaných
+třídou \emph{Vertex}).
+\begin{itemize}
+  \item \emph{Graph}
+  \begin{itemize}
+    \item[] Třída umožnuje přidávat do grafu jednotlivé vrcholy a hrany je spojující. Vrcholy jsou ukládány do hashovací tabulky, kde je jejich název v~datovém
+    type String asociován s~objektem třídy \emph{Vertex}. V~této hashovací tabulce je uložen jediný objekt představující daný vrchol a
+    ve zbytku programu se pracuje s~ukazatelem na tady uložený objekt.
+    
+    Podobně jsou zde ukládány hrany, které jsou uloženy opět v~hashovací tabulce, kde je asociováno id hrany (přiděleno programem samotným) typu integer
+    s~objektem \emph{Edge} reprezentujícím hranu. Ve zbytku programu se pracuje s~ukazateli na hranu uloženou zde.
+
+    Třída obsahuje také metodu \emph{serialize} umožnující převést graf zpět do textového formátu, který je použit i pro vstupní graf.
+  \end{itemize}
+
+  \item \emph{Vertex}
+  \begin{itemize}
+    \item[] Třída reprezentující vrchol v~grafu. Mimo jiné obsahuje seznam objektů třídy \emph{Edges} reprezentujících hrany, které jsou s~daným vrcholem
+    incidentní.
+  \end{itemize}
+
+  \item \emph{Edge}
+  \begin{itemize}
+    \item[] Třída reprezentující hranu grafu. V~datových členech mimo jiné uchovává vrcholy, které spojuje, a mravence, které přes ni v~dané iteraci prošli. 
+    Třída také obsahuje metodu pro aktualizaci hladiny feromonu na hraně (což je jedna ze stěžejních části ACO algoritmu, jak bylo popsáno v~sekci 
+    \ref{sec:algorithm}), kterou reprezentuje, proto je třeba třídě v~konstruktoru předat také hodnoty příslušných parametrů potřebných pro tuto operaci.
+  \end{itemize}
+\end{itemize}
+%populace mravencu
+%algoritmy - defaultni trida; rozsireni; nutnost obecnosti v parametrech -> aby bylo mozne delat vsechna rozsireni
+
+\subsection{Použité technologie}
+% c++ 11 bez externich knihoven
 \section{Implementace}
 \label{sec:implementation}
 % implementace
@@ -202,6 +282,8 @@ kde $L^*$ je cena nejlepší nalezené cesty.
 % zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
 
 \appendix
+\section{Instalace}
+\label{app:install}
 \section{Uživatelský manuál}
 \label{app:help}
 \section{Formát vstupního souboru}
