@@ -29,6 +29,8 @@ Cílem této práce je vytvoření nástroje pro demonstraci činnosti ACO algor
 o~další modifikace algoritmu, ale již v~základní verzi bude implementovat více verzí algoritmu. Implementačním jazykem je C++ a je použit objektově orientovaný
 přístup pro zvýšení modifikovatelnosti a rozšiřitelnosti kódu. Nástroj má podobu aplikace s~rozhraním v~příkazové řádce.
 
+TODO zvazit jestli neco nerict o~tom, ze byl implementovat jen ant system a typicke rozsireni a ne pokrocile optimalizace - neoptimalizuje tak dobre
+
 V~tomto dokumetu bude popsán samotný algoritmus \ref{sec:algorithm}, dále architektura aplikace \ref{sec:design},
 některé implementační detaily \ref{sec:implementation}, experimenty provedené s~algoritmem a jejich vyhodnocení \ref{sec:eval}.
 Součástí dokumentu jsou dvě přílohy obsahující uživatelskou příručku \ref{app:help} a popis formátu vstupního grafu \ref{app:format}.
@@ -317,11 +319,11 @@ implemetovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd 
 \subsection{Upřesnění ACO algoritmu}
 Během implementace byly učiněny následující zpřesnění ACO algoritmu vůči popisu ze sekce \ref{sub:algorithm}.
 \begin{itemize}
-  \item Pokud během výběru dalšího uzlu při tvorbě řešení jednotlivých mravenců má více vrcholů stejnou pravděpodobnost výběru, tak je jeden z nich vybrán náhodně.
-  Tím se předchází opakovanému procházení stejné cesty jen kvůli specifickému seřazení uzlů v interní reprezentaci.
-  \item Jako vstup je akceptován i neúplný graf, tudíž může během tvorby řešení dospět některý z mravenců do uzlu, z něhož již nemá další cestu. Takovýto mravenec
+  \item Pokud během výběru dalšího uzlu při tvorbě řešení jednotlivých mravenců má více vrcholů stejnou pravděpodobnost výběru, tak je jeden z~nich vybrán náhodně.
+  Tím se předchází opakovanému procházení stejné cesty jen kvůli specifickému seřazení uzlů v~interní reprezentaci.
+  \item Jako vstup je akceptován i neúplný graf, tudíž může během tvorby řešení dospět některý z~mravenců do uzlu, z~něhož již nemá další cestu. Takovýto mravenec
   je po zbytek cesty ignorován a to včetně aktualizace feromonu na hranách.
-  \item S předchozím bode souvisí také to, že pokud žádný mravenec nenalezne během zadaných iterací korektní řešení, může algoritmus skončit bez nalezení
+  \item S~předchozím bode souvisí také to, že pokud žádný mravenec nenalezne během zadaných iterací korektní řešení, může algoritmus skončit bez nalezení
   řešení.
 \end{itemize}
 
@@ -331,6 +333,43 @@ Implementace byla provedena v~jazyce C++ bez použítí externích knihoven. Pro
 \section{Experimenty a vyhodnocení}
 \label{sec:eval}
 % popsat nejaky rozumny graf/nakreslit ho -> udelat graf vzadelnosti odchylek v zavislosti na poradi prochazky
+Aplikace byla testována na ulohách řešení problému obchodního cestujícího. Grafy pomocí nichž je problém zadán byly získany z~TSPLIB \cite{TSPLIB}.
+Použité grafy lze najít ve složce \emph{examples/}, kde jsou již grafy konvertovány do vstupního formátu dokumentované aplikace. Pro bližší popis
+byla vybrána úloha \emph{d198}, se kterou již byly provedeny experimenty v~\cite{aco:maxmintsp,aco:acs}. V~následujících experimentech byly použity následující
+parametry:
+  \begin{itemize}
+    \item $\alpha=1, \beta=2, \rho=0.2$
+    \item Počet mravenců: 25
+    \item Počet iterací: 100
+  \end{itemize}
+Pokud jsou uváděny průměrné hodnoty, jsou tyto průměry vypočteny z~25 měření běhu algoritmu.
+% provedl jsem ho
+
+\subsection{d198}
+Tato varianta úlohy obsahuje 198 vrcholů grafu, přes které se hledá optimální cesta. Pro experminet byly použity dvě varianty algoritmu:
+\begin{itemize}
+  \item MaxMin Ant System, kde jako minimum byla zvolena hodnota $0.000001$ a jako maximum $0.000473$ a to dle vztahu z~\cite{aco:maxmintsp}.
+  \item Ant Colony System, kde hodnota $q_0=0.95$ stejně jako v~\ref{aco:acs}.
+\end{itemize}
+Výsledky experimentů jsou shrnuty v~tabulce \ref{tabd198}. Optimálním řešením tohoto problému je $15 780$ \ref{aco:acs}.
+\begin{table}[tb]
+\begin{center}
+  \begin{tabular}{ | l | r | r |}
+   \hline
+    & \textbf{Nejlepší výsledek} & \textbf{Průměrný výsledek} \\ \hline \hline
+    ACO MaxMin & $7.5$ & $92.5$ \\ \hline
+    ACO ACS & $7.5$ & $92.5$ \\ \hline
+    ACS dle \cite{aco:acs} & $15 780$ & $15 781.7$ \\ \hline
+    MaxMin dle \cite{aco:maxmintsp} & $15 780$ & $15 780.2$\\ \hline
+   \end{tabular}
+   \caption{Tabulka výsledků experimentu d198.}
+   \label{tabd198}
+\end{center}
+\end{table}
+TODO graf konvergence
+
+Ja je patrno z výsledků implementace algoritmu z \cite{aco:maxmintsp,aco:acs} byly schopny nalézt optimální řešení, dokumentované aplikace nikoliv. Jako významný
+faktor tohoto výsledků lze považovat, že implementace použily další optimalizace jako depth search a candidate list
 
 \section{Závěr}
 \label{sec:concl}
@@ -339,8 +378,8 @@ Ta byla implementována v~základní variantě Ant System, některých
 jeho modifikacích, ve variantě Ant Colony System, MaxMin Ant System a Rank-based Ant System. Implementace byla provedena v~C++ s~použitím objektově orientovaného
 přístupu tak, aby by bylo snadné další rozšíření programu o~další varianty ACO.
 
-Program umožňuje vypisovat informace řešení v~každé iteraci, a tak demostruje jeho průběh. Behem testovani byly implementovany skripty umoznujici prevod techto
-Informaci do formatu vhodne pro vizualizaci techto dat. Aplikace byla testovana na nekolika grafech.
+Aplikace byla testována na několika grafech popisujících problém obchodního cestujícího. Dalším možné rozšíření aplikace spočivá v~implementaci optimalizací
+pro získání lepších řešení.
 
 % zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
 \newpage
@@ -370,7 +409,7 @@ která bude použita pokud parametr není uživatelem zadán):
       \item -p reálné číslo ...  Koeficient $\alpha$. \defVal{1.0}
       \item -d reálné číslo ... Koeficient $\beta$. \defVal{1.0}
       \item -c reálné číslo ... Konstanta $Q$. \defVal{1.0}
-      \item -e reálné číslo ... Koeficient $\rho$ z~intervalu <0,1>. \defVal{0.5}
+      \item -e reálné číslo ... Koeficient $\rho$ z~intervalu $<0,1>$. \defVal{0.5}
       \item -r ... Vypne náhodný výběr z~více vrcholů se stejnou pravděpodobností
       \item -g řetězec ... Použitý ACO algoritmus. Parametr může mít následující hodnoty:
       \begin{itemize}
@@ -387,7 +426,7 @@ která bude použita pokud parametr není uživatelem zadán):
         \item -x reálné číslo ... Maximální hodnota feromonu na hraně (Max-Min Ant System). \defVal{10.0}
         \item -n reálné číslo ... Minimální hodnota feromonu na hraně (Max-Min Ant System). \defVal{1.0}
         \item -w reálné číslo ... Počet nejlepších mravenců, kteří vypouští feromon (Rank-based Ant System). \defVal{10}
-        \item -q reálné číslo ... Konstanta $q_0$ z~intervalu <0,1> (Ant Colony System). \defVal{0.5}
+        \item -q reálné číslo ... Konstanta $q_0$ z~intervalu $<0,1>$ (Ant Colony System). \defVal{0.5}
       \end{itemize}
     \end{itemize}
   \end{itemize}

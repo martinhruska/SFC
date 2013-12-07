@@ -105,7 +105,7 @@ void ACO::ACOAlgorithm::saveBestPath()
   { // get best solution from last iteration
     if (verbose_)
     {
-      std::cout << "Ant " << ant->getId() << " "
+      std::cout << "Ant " << ant->getId() << ": "
         << printPath(ant->getPath()) << " with cost "
         << ant->getPathCost() << " and goal satisfied: " << ant->isGoalSatisfied()
         << std::endl;

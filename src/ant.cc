@@ -32,7 +32,9 @@ void ACO::Ant::makeStep(ASImplementation& as)
   }
  
   nextEdge->addAnt(this);
+  //std::cerr << "Old " << pathCost_ << " " << nextEdge->getDistance() << std::endl;
   pathCost_ += nextEdge->getDistance();
+  //std::cerr << "New " << pathCost_ << " " << std::endl;
   setActualVertex(&nextEdge->getSecondVertex(*actualVertex_));
   return;
 }

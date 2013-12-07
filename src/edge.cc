@@ -29,7 +29,7 @@ void ACO::Edge::updatePheromon(ASImplementation& as)
 {
   float sumDelta = 0.0f;
 
-  int i=1;
+  int i=1; // ant order for rank based alg
   for (Ant *a : passedAnts_)
   {
     if (!a->isGoalSatisfied())
@@ -38,9 +38,12 @@ void ACO::Edge::updatePheromon(ASImplementation& as)
     }
     sumDelta += as.makeOneDelta(pheromonConst_, distance_, a, i++);
   }
+  //std::cerr << "A old pheromon value is " << pheromon_ << std::endl;
+  //std::cerr << "Delta is " << sumDelta << std::endl;
   pheromon_ = (1-evaporationCoef_)*pheromon_ + sumDelta;
   pheromon_ += as.getPheromonAddition(pheromonConst_, passedAnts_.size());
   pheromon_ = as.maxMinCorrection(pheromon_);
+  //std::cerr << "A new pheromon value is " << pheromon_ << std::endl;
 }
 
 /**
