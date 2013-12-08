@@ -1,6 +1,15 @@
 #ifndef ACO_EDGE
 #define ACO_EDGE
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Edge class class header
+ ****************************************************************/
+
 #include <vector>
 
 #include "aco_classes.hh"

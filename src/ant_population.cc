@@ -4,7 +4,8 @@ ACO::AntPopulation::AntPopulation(int populationSize,
     float pheromonCoef, float distanceCoef, bool randomChoice) :
   antId_(0), populationSize_(populationSize), actAnt_(0),
   pheromonCoef_(pheromonCoef), distanceCoef_(distanceCoef),
-  randomChoice_(randomChoice)
+  randomChoice_(randomChoice),
+  e_noMoreAnt("Zadni mravenci nejsou dostupni")
 {
   populate();
 }

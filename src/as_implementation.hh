@@ -1,6 +1,15 @@
 #ifndef ACO_AS_IMPL
 #define ACO_AS_IMPL
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Ant System implementation class header.
+ ****************************************************************/
+
 #include "ant_population.hh"
 #include "ant.hh"
 

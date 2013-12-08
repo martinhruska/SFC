@@ -1,6 +1,15 @@
 #ifndef ACO_VERTEX
 #define ACO_VERTEX
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Class for representation of vertex.
+ ****************************************************************/
+
 #include <unordered_set>
 #include <string>
 

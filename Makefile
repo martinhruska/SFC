@@ -1,7 +1,9 @@
 all:
-	cd src && make && cp aco ../
+	cd src && make
+	cp src/aco ./
 clean:
-	rm aco && cd src && make clean
+	cd src && make clean
+	rm aco
 run:
 	./aco --help
 run_example:

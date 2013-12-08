@@ -1,6 +1,15 @@
 #ifndef ACO_GRAPH
 #define ACO_GRAPH
 
+/****************************************************************
+ * ACO algorithm
+ * Project to subject Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Graph class header
+ ****************************************************************/
+
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -18,11 +27,9 @@ class ACO::Graph
 {
 public: // public data types
   typedef Edge::Distance Distance;
+
 private: // private data types
   typedef std::string String;
-
-private: // private constants
-  const String e_edgeAlreadyDeclared = "Vrchol jiz byl definovan";
 
 private: // private data types
   typedef std::unordered_map<int, Edge> EdgesTranslator;
@@ -30,6 +37,7 @@ private: // private data types
   typedef std::unordered_map<int, String> VerticesBackTranslator;
   typedef std::vector<Edge *> Edges;
   typedef std::vector<Vertex *> Vertices;
+
 private: // private data members
   int vertexId_;
   int edgeId_;
@@ -45,10 +53,14 @@ private: // private data members
   const float pheromonConst_;
   const float evaporationCoef_;
 
+private: // private constants
+  const String e_edgeAlreadyDeclared;
+
 public: // constructors
   Graph(float pheromonConst, float evaporationCoef) : vertexId_(0),
     edgeId_(0), pheromonConst_(pheromonConst),
-    evaporationCoef_(evaporationCoef)
+    evaporationCoef_(evaporationCoef),
+    e_edgeAlreadyDeclared("Vrchol jiz byl definovan")
   {};
 
 public: // public methods

@@ -1,6 +1,15 @@
 #ifndef ACC_AS_ACS
 #define ACS_AS_ACS
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Ant Colony System implementation class.
+ ****************************************************************/
+
 #include "as_implementation.hh"
 #include "random_provider.hh"
 

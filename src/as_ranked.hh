@@ -1,6 +1,15 @@
 #ifndef ACO_AS_RANKED
 #define ACO_AS_RANKED
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Rank based Ant System implementation class header.
+ ****************************************************************/
+
 #include "as_implementation.hh"
 
 namespace ACO

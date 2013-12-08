@@ -216,106 +216,57 @@ objektově orientovaného návrhu. Základní logické rozčlenění aplikace, k
 Parametry ACO algoritmu a další volby je možné nastavit prostřednictvím parametrů příkazového řádku. Jejich bližší popis lze nalézt v~doplňku \ref{app:help}.
 Pro zpracování těchto parametrů byly navrženy následující dvě třídy:
 \begin{itemize}
-  \item \emph{Parameters}
-  \begin{itemize}
-    \item[] Jako svoje datové členy uchovává hodnoty všech parametrů převedené do příslušných datových typů.
-    Obsahuje metody pro nastavení a získání hodnot jednotlivých parametrů.
-  \end{itemize}
-  \item \emph{ParametersParser}
-  \begin{itemize}
-    \item[] Postupně prochází jednotlivé parametry předané aplikaci, provádí jejich konverzi do příslušných datových typů a ukládá je do odpovídajících
-    datových členu třídy \emph{Parameters}.
-  \end{itemize}
+  \item \emph{Parameters}: Uchovává hodnoty všech parametrů převedené do příslušných datových typů.
+  \item \emph{ParametersParser}: Zpracovává zadané parametry a nastavuje dle nich objekt třídy \emph{Parameters}.
 \end{itemize}
 
 \subsection{Zpracování vstupního souboru s~grafem}
-Graf pro algoritmus ACO je programu předáván prostřednictvím textového souboru, v~němž je v~předem daném formátu (více informaci viz. doplněk \ref{app:format})
-popsán graf. Pro jeho zpracování slouží tato třída:
+Pro zpracování vstupního grafu (jeho formát viz. \ref{app:format}) a jeho převedení do interní reprezentace (třída \emph{Graph}) slouží tato třída:
 \begin{itemize}
   \item \emph{GraphParser}
-  \begin{itemize}
-    \item[] Třída poskytuje metodu pro zpracování vstupu, která čte postupně vstupní soubor řádek po řádku a jednotlivé řádky převádí do interní reprezentace,
-    jež je popsána v~části \ref{subsec:graph}.
-  \end{itemize}
 \end{itemize}
-%parsovani grafu
-%graf
 
 \subsection{Interní reprezentace grafu}
 \label{subsec:graph}
-Graf je interně reprezentován pomocí třídy \emph{Graph}, která obsahuje seznam hran (reprezentovaných třídou \emph{Edge}) a seznam vrcholů (reprezentovaných
-třídou \emph{Vertex}).
+Graf je interně reprezentován pomocí následujících tříd:
 \begin{itemize}
-  \item \emph{Graph}
-  \begin{itemize}
-    \item[] Třída umožňuje přidávat do grafu jednotlivé vrcholy a hrany je spojující. Vrcholy jsou ukládány do hašovací tabulky, kde je jejich název v~datovém
-    type String asociován s~objektem třídy \emph{Vertex}. V~této hašovací tabulce je uložen jediný objekt představující daný vrchol a
-    ve zbytku programu se pracuje s~ukazatelem na tady uložený objekt.
-    
-    Podobně jsou zde ukládány hrany, které jsou uloženy opět v~hašovací tabulce, kde je asociováno id hrany (přiděleno programem samotným) typu integer
-    s~objektem \emph{Edge} reprezentujícím hranu. Ve zbytku programu se pracuje s~ukazateli na hranu uloženou zde.
+  \item \emph{Graph}: Třída uchovává jako datové členy množiny hran (objekty třídy \emph{Edge}) a vrcholů (objekty třídy \emph{Vertex}).
+    Umožňuje také zpětnou serializaci grafu do textové podoby metodou \emph{serialize}.
 
-    Třída obsahuje také metodu \emph{serialize} umožnující převést graf zpět do textového formátu, který je použit i pro vstupní graf.
-  \end{itemize}
+  \item \emph{Vertex}: Třída reprezentující vrchol v~grafu. Obsahuje seznam objektů třídy \emph{Edge} reprezentující hrany, které spojují daný vrchol s~danými
+    vrcholy.
 
-  \item \emph{Vertex}
-  \begin{itemize}
-    \item[] Třída reprezentující vrchol v~grafu. Mimo jiné obsahuje seznam objektů třídy \emph{Edges} reprezentujících hrany, které jsou s~daným vrcholem
-    incidentní.
-  \end{itemize}
-
-  \item \emph{Edge}
-  \begin{itemize}
-    \item[] Třída reprezentující hranu grafu. V~datových členech mimo jiné uchovává vrcholy, které spojuje, a mravence, které přes ni v~dané iteraci prošli. 
-    Třída také obsahuje metodu pro aktualizaci hladiny feromonu na hraně (což je jedna ze stěžejních části ACO algoritmu, jak bylo popsáno v~sekci 
-    \ref{sec:algorithm}), kterou reprezentuje, proto je třeba třídě v~konstruktoru předat také hodnoty příslušných parametrů potřebných pro tuto operaci.
-  \end{itemize}
+  \item \emph{Edge}: Třída reprezentující hranu grafu. V~datových členech mimo jiné uchovává vrcholy, které spojuje,
+    a mravence, které přes ni v~dané iteraci prošli. Třída také obsahuje metodu pro aktualizaci hladiny feromonu na hraně
+    (popis této operace v~sekci \ref{sec:algorithm}).
 \end{itemize}
 
 \subsection{Populace mravenců}
 Základem ACO algoritmu je populace mravenců, kteří postupně tvoří optimální řešení daného problému. Pro práci s~populací mravenců byly navrženy tyto dvě třídy:
 \begin{itemize}
-  \item Ant
-  \begin{itemize}
-    \item[] Třída popisující umělé mravence. Obsahuje metody pro výběr dalšího uzlu během tvorby řešení a také uchovává informace o~řešení tvořeném mravencem
+  \item \emph{Ant}: Třída popisující umělé mravence. Obsahuje metody pro výběr dalšího uzlu během tvorby řešení a také uchovává informace o~řešení
+  tvořeném mravencem
     v~aktuální iteraci.
-  \end{itemize}
-  \item AntPopulation
-  \begin{itemize}
-    \item[] Třída obsahuje jako datový člen množinu všech mravenců reprezentovaných objekty třídy \emph{Ant}. Umožňuje také populaci mravenců vygenerovat.
-  \end{itemize}
+  \item \emph{AntPopulation}: Generuje a uchovává populaci mravenců.
 \end{itemize}
 
 \subsection{Implementace ACO algoritmů}
 Jak bylo popsáno v~části \ref{sec:algorithm}, existuje více algoritmů implementujících ACO meta-heuristiku.
-Aplikace implementuje všechny z~popsaných variant algoritmu. Implementaci algoritmu zastřešuje třída \emph{ACOAlgorithm} a jednotlivé varianty jsou pak
-implementovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd realizujících ACO algoritmus bude následovat.
+Aplikace implementuje všechny z~popsaných variant algoritmu a to pomocí těchto tříd 
 
 \begin{itemize}
-  \item ACOAlgorithm
-  \begin{itemize}
-    \item[] Obsahuje jako svoje datové členy obsahuje všechny potřebné informace k~provedení algoritmu -- třídu
-    \emph{Graph}, třídu \emph{AntPopulation} a ukládá také nejlepší nalezenou cestu. Třída \emph{ACOAlgorithm} obaluje svými metodami všechny hlavní části obecného
-    ACO algoritmu, tedy vytvoření řešení mravenci (metoda \emph{createAntSolution}), uložení nejlepší cesty (metoda \emph{saveBestPath}) 
-    a aktualizace feromonu (metoda \emph{updatePhermon}). Třída umožňuje také vypsat průběžné kroky algoritmu tak, aby byl demonstrován jeho průběh.
-
-    Dalším důležitým datovým členem této třídy je objekt představující instanci některé z~tříd implementující Ant System, jeho modifikace, nebo alternativy jako
-    Ant Colony System, MaxMin Ant System atd. Tento objekt poskytuje metody pro aktualizaci feromonu na hranách a operace s~tím spojené,
-    či výpočtu pravděpodobnosti výběru dalšího uzlu v~cestě v~souladu s~odpovídající variantou ACO algoritmu.
-  \end{itemize}
-  \item Konkrétní implementace ACO
-    \item[] Aplikace poskytuje více implementací ACO. Základní třídou je ASImplementation, která implementuje Ant System v~jeho základní podobě. Tuto třídu
-    dědí ostatní třídy implementující jiné varianty ACO a případně pomocí polymorfismu upravují ty části algoritmu, v~které se daná varianta liší. Implementovány
-    byly následující třídy:
+  \item \emph{ACOAlgorithm}: Zastřešuje provádění ACO algoritmu a jeho hlavních částí, tedy tvorby řešení mravenců v~dané iteraci,
+  uložení nejlepšího řešení a také aktualizaci feromonu. Pro konkrétní provedení těchto operací volá metody třídy \emph{ASImplementation} a jejich potomků.
+  \item Hlavní třídou implementující konkrétní operace je \emph{ASImplementation}, která implementuje Ant System v~jeho základní podobě. Tuto třídu
+  dědí ostatní třídy implementující jiné varianty ACO a případně pomocí polymorfismu upravují ty části algoritmu, v~které se daná varianta liší. Implementovány
+  byly ještě následující třídy:
     \begin{itemize}
-      \item ASImplementation -- implementace základního Ant System. Implementuje všechny metody potřebné pro provedení algoritmu jako aktualizace feromonu na
-      hranách, či výběr následujícího uzlu v~cestě. Ostatní třídy tuto dědí a upravují metody tak, aby odpovídali jejich variantě.
-      \item ASDensity -- implementuje verzi Ant System density.
-      \item ASQuantity -- implementuje verzi Ant System quantity.
-      \item ASElitist -- implementuje elitářskou variantu Ant System.
-      \item ASAcs -- implentuje Ant Colony System.
-      \item ASMaxMin -- implementuje MaxMin Ant System.
-      \item ASRanked -- implementuje Rank-based Ant System.
+      \item \emph{ASDensity} -- implementuje verzi Ant System density.
+      \item \emph{ASQuantity} -- implementuje verzi Ant System quantity.
+      \item \emph{ASElitist} -- implementuje elitářskou variantu Ant System.
+      \item \emph{ASAcs} -- implentuje Ant Colony System.
+      \item \emph{ASMaxMin} -- implementuje MaxMin Ant System.
+      \item \emph{ASRanked} -- implementuje Rank-based Ant System.
     \end{itemize}
 \end{itemize}
 
@@ -428,7 +379,9 @@ Konvergence k~optimálnímu řešení \emph{lin318} během jednotlivých iterac�
 \end{figure}
 
 \subsubsection{rat783}
-Posledním popsaným experimentem je řešení úlohy \emph{rat783}. Ta obsahuje $783$ vrcholů a cena jejího optimálního řešení je $8 806$ \cite{aco:acs}. 
+Posledním popsaným experimentem je řešení úlohy \emph{rat783}. Jako jediný z~úloh použitých pro experimentování není přiložena ve složce \emph{examples/}
+kvůli její přílišné velikosti.
+Ta obsahuje $783$ vrcholů a cena jejího optimálního řešení je $8 806$ \cite{aco:acs}. 
 Měření a porovnání s~experimenty z~\cite{aco:maxmintsp,aco:acs} je v~tabulce \ref{rat783}
 \begin{table}[tb]
 \begin{center}
@@ -444,7 +397,6 @@ Měření a porovnání s~experimenty z~\cite{aco:maxmintsp,aco:acs} je v~tabulc
    \label{rat783}
 \end{center}
 \end{table}
-
 
 Graf \ref{rat783} ilustruje opět konvergenci k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y cena nejlepšího
 řešení v~dané iteraci. Jedná se o~jeden z~běhů algoritmu Ant System MaxMin provedených během experimentů. Jak je zřejmé, tak po X iteracích se algoritmus
@@ -531,7 +483,7 @@ Program čeká jako vstup textový soubor s~popisem grafu, v~němž se bude hled
 v~doplňku \ref{app:format}. Ve složce \emph{examples/} jsou příklady grafů, na kterých lze program testovat.
 
 \subsection{Příklad spuštění}
-Následující příklad spuštění lze spustit pomocí příkazu \texttt{make run\_example} z hlavní složky programu:\\
+Následující příklad spuštění lze spustit pomocí příkazu \texttt{make run\_example} z~hlavní složky programu:\\
 \texttt{./aco -i examples/ex16/ex16.aco -a 10 -m 10 -d 2 -e 0.2 -p 1\\ -g maxmin -x 0.5 -n 0.1 -v}
 
 \section{Formát vstupního souboru}

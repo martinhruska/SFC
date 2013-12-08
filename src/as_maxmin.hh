@@ -1,6 +1,15 @@
 #ifndef ACO_AS_MAXMIN
 #define ACO_AS_MAXMIN
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Ant System MaxMin implementation class header.
+ ****************************************************************/
+
 #include "as_implementation.hh"
 
 namespace ACO

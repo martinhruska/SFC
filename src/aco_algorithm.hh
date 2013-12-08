@@ -1,6 +1,16 @@
 #ifndef ACO_ACO_ALGORITHM
 #define ACO_ACO_ALGORITMH
 
+/****************************************************************
+ * ACO algorithm
+ * Project to Soft computing at FIT BUT
+ * Author: Martin Hruska
+ * E-mail: xhrusk16@stud.fit.vutbr.cz
+ *
+ * Aco algorithm execution
+ ****************************************************************/
+
+
 #include "ant_population.hh"
 #include "graph.hh"
 #include "random_provider.hh"

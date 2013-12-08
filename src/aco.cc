@@ -1,6 +1,6 @@
 /****************************************************************
  * ACO algorithm
- * Project to subject Soft computing at FIT BUT
+ * Project to Soft computing at FIT BUT
  * Author: Martin Hruska
  * E-mail: xhrusk16@stud.fit.vutbr.cz
  *

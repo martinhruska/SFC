@@ -8,10 +8,10 @@ using ACO::ParametersParser;
 
 void ParametersParser::printHelp()
 {
-  std::cout << "Pouziti: aco -i cesta [parametry]" << std::endl;
-  std::cout << "Parametry (povinne):" << std::endl;
+  std::cout << "POUZITI: aco -i cesta [parametry]" << std::endl;
+  std::cout << "PARAMETRY (povinne):" << std::endl;
   std::cout << "  -i cesta ......... Cesta k vstupnimu souboru" << std::endl;
-  std::cout << "OPTIONS (optional):" << std::endl;
+  std::cout << "PARAMETRY (volitelne):" << std::endl;
   std::cout << "  -v .............. Program demostruje svoji cinnost pomoci vypisu" << std::endl;
   std::cout << "  -a integer ...... Cele cislo udavajici pocet mravencu" << std::endl;
   std::cout << "  -m integer ...... Cele cislo udavajici pocet iteraci" << std::endl;
