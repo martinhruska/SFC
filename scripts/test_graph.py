@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 # parameter 1 input file
+# parameter 2 mode
 
 import sys
 import re

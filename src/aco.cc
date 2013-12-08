@@ -183,7 +183,7 @@ int main(int argc, char** argv)
   }
   Ant::Path path = aco.getResult();
 
-  std::cout  <<  "Final result: ";
+  std::cout  <<  "Best path: ";
   if (path.size() == 0)
   {
     std::cout  <<  "Solution not found"  <<  std::endl;

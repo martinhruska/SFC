@@ -4,11 +4,11 @@
 # Projekt: SFC
 
 PROJ=dokumentace
-TEX_COMP=latex # prekladac latexu
+TEX_COMP=pdflatex # prekladac latexu
 BIB=bibtex
-DVI=dvips # prevod do post scriptu
-PDF=ps2pdf #prevod do pdf
-$A4=-sPAPERSIZE=a4
+#DVI=dvips # prevod do post scriptu
+#PDF=ps2pdf #prevod do pdf
+#$A4=-sPAPERSIZE=a4
 VLNA=vlna
 VLNA_OPTS=-l -m -n
 
@@ -18,8 +18,6 @@ all:
 	$(BIB) $(PROJ)
 	$(TEX_COMP) $(PROJ).tex
 	$(TEX_COMP) $(PROJ).tex
-	$(DVI) $(PROJ).dvi
-	$(PDF) $(A4)  $(PROJ).ps
 
 clean:
 	rm *.pdf *.aux *.blg *.log *.dvi *.ps *.bbl
