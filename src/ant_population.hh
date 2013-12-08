@@ -19,7 +19,7 @@ public: // private data types
   typedef std::unordered_map<int,Ant> PopulationMap;
 
 private: // private constants
-  std::string e_noMoreAnt = "No ants are available";
+  std::string e_noMoreAnt = "Zadni mravenci nejsou dostupni";
 
 public: // data members
   int antId_;

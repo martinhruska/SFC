@@ -25,8 +25,8 @@ private: // private data types
   typedef std::unordered_set<Edge *> Edges;
 
 private: // private error messages
-  std::string e_vertexAlreadyVisited = "Vertex has been already visited";
-  std::string e_noBestEdge = "No best edge found";
+  std::string e_vertexAlreadyVisited = "Vrchol jiz byl navstiven";
+  std::string e_noBestEdge = "Zadna hrana pro pokracovani cesty nebyla nalezena";
 private: // private data members
   int id_;
   Vertex* actualVertex_;

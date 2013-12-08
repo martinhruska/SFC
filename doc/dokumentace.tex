@@ -26,13 +26,13 @@ konkrétně patřící mezi metody inteligence hejna. Algoritmus hledá optimál
 inkrementálně hledají nejlepší cestu grafem s~oceněnými hranami \cite{aco:main}. 
 Z~tohoto důvodu musí být optimalizační problém popsatelný právě oceněným grafem, tudíž se metoda používá především pro řešení diskrétních problémů.
 
-Cílem této práce je vytvoření nástroje pro demonstraci činnosti ACO algoritmu, který umožní s~algoritmem experimentovat, zároveň bude jednoduše rozširitelný
+Cílem této práce je vytvoření nástroje pro demonstraci činnosti ACO algoritmu, který umožní s~algoritmem experimentovat, zároveň bude jednoduše rozšiřitelný
 o~další modifikace algoritmu, ale již v~základní verzi bude implementovat více verzí algoritmu. Implementačním jazykem je C++ a bude použit objektově orientovaný
 přístup pro zvýšení modifikovatelnosti a rozšiřitelnosti kódu. Nástroj bude mít podobu konzolové aplikace.
 
-V~tomto dokumetu bude popsán samotný algoritmus (sekce \ref{sec:algorithm}), dále architektura a implementace samotného programu (sekce \ref{sec:design}),
+V~tomto dokumentu bude popsán samotný algoritmus (sekce \ref{sec:algorithm}), dále architektura a implementace samotného programu (sekce \ref{sec:design}),
 experimenty provedené s~algoritmem a jejich vyhodnocení (sekce \ref{sec:eval}).
-Součástí dokumentu jsou tři přílohy obsahující návod k~instalci (doplněk \ref{app:install}),
+Součástí dokumentu jsou tři přílohy obsahující návod k~instalaci (doplněk \ref{app:install}),
 uživatelskou příručku (doplněk \ref{app:help}) a popis formátu vstupního grafu (doplněk \ref{app:format}).
 
 \section{ACO Algoritmus}
@@ -41,11 +41,11 @@ Jak bylo uvedeno v~úvodní sekci \ref{sec:intro}, algoritmus pracuje s~množino
 v~jednotlivých iteracích hledají optimální cestu ve váženém grafu popisujícím daný problém. Za řešení úlohy se považuje cesta (posloupnost vrcholů grafu)
 procházející všemi vrcholy grafu právě
 jednou s~tím, že se mravenec nakonec cesty vrací do počátečního uzlu. Každá hrana grafu má určitou hladinu feromonu, který vypouští mravenci při každém průchodu.
-Feremon  ovlivňuje výběr hrany pro další krok mravence při tvorbě řešení v~dané iteraci.
+Feromon  ovlivňuje výběr hrany pro další krok mravence při tvorbě řešení v~dané iteraci.
 Existují různé varianty ACO algoritmu, nyní bude ovšem popsána jeho základní verze nazvaná Ant System.
 
 Řešení optimalizačního problému probíhá v~zadaném počtu iterací, při čemž v~každé iteraci vytvoří každý mravenec svoje řešení.
-Počáteční uzel, ze kterého mravenec začiná vytvářet cestu, je vybrán náhodně.
+Počáteční uzel, ze kterého mravenec začíná vytvářet cestu, je vybrán náhodně.
 V~každém kroku tvorby řešení musí mravenec zvolit další hranu, po níž bude pokračovat do dalšího uzlu. Volba hrany záleží na ceně této hrany (tedy vzdálenosti
 uzlu, do kterého tato hrana vede) a hladině feromonu na dané hraně. Tyto dvě veličiny určují pravděpodobnost,
 se kterou si mravenec vybere danou hranu dle následujícího vzorce \cite{aco:variations}:
@@ -58,20 +58,20 @@ se kterou si mravenec vybere danou hranu dle následujícího vzorce \cite{aco:v
    $
 \end{center}
 kde $c_{ij}$ je hrana z~uzlu $i$ do uzlu $j$, $s_k^p$ je částečné řešení mravence $k$, $N(s_k^p)$ je množina vrcholů nepatřících do $s_k^p$, $\eta_{ij}$ je 
-dáno vztem ($1/d_{ij}$), $d_{ij}$ je cena hrany (vzdálenost) mezi uzly $i$ a $j$, $\tau_{ij}$ je hladina feromonu na hraně $c_{ij}$, $\alpha$
+dáno vztahem ($1/d_{ij}$), $d_{ij}$ je cena hrany (vzdálenost) mezi uzly $i$ a $j$, $\tau_{ij}$ je hladina feromonu na hraně $c_{ij}$, $\alpha$
 je váha feromonu a $\beta$ je váha vzdálenosti mezi $i$ a $j$.
 
-Jakmile jsou řešení pro dané mravence hotova, najde se mravenec s~nejkvalitnějším řešním v~dané iteraci a pokud je toto lepší, než aktuálně nejlepší řešení
+Jakmile jsou řešení pro dané mravence hotova, najde se mravenec s~nejkvalitnějším řešením v~dané iteraci a pokud je toto lepší, než aktuálně nejlepší řešení
 z~doposud provedených iterací, tak je uloženo na jeho místo.
 
-Hladina feromonu je aktualizována na konci každé iterace a to tak, že mravenec vypouští po cestě, kterou prošel grafem, množství feromonu přímo uměrné kvalitě
+Hladina feromonu je aktualizována na konci každé iterace a to tak, že mravenec vypouští po cestě, kterou prošel grafem, množství feromonu přímo úměrné kvalitě
 ním vytvořeného řešení. V~různých verzích algoritmu se technika aktualizace feromonu, množství feromonu vypouštěného mravencem, či počet mravenců vypouštějících 
 feromon může různit. V~popisované verzi Ant System je feromon na hraně z~vrcholu $i$ a $j$ aktualizován následujícím způsobem \cite{aco:variations}:
 \begin{center}
   $\tau_{ij}=(1-\rho)\tau_{ij}+\sum\limits_{k=1}^{n}\Delta\tau_{ij}^k$
 \end{center}
 kde $\rho \in <0,1>$ je koeficient odpařování feromonu
-a $\Delta\tau_{ij}^k$ je množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem a je definováno následovně:
+a $\Delta\tau_{ij}^k$ je množství feromonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem a je definováno následovně:
 \begin{center}
   $\Delta\tau_{ij}^k = 
   \begin{cases}
@@ -92,7 +92,7 @@ také uvedeny alternativní ACO algoritmy k~Ant System a to Ant Colony System, M
 definicím zavedeným v~předchozím textu.
 
 \subsubsection{Ant Density}
-Jedná se o~modifikaci Ant system, kde je hodnota $\Delta\tau_{ij}^k$ (množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) definována
+Jedná se o~modifikaci Ant system, kde je hodnota $\Delta\tau_{ij}^k$ (množství feromonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) definována
 následovně \cite{aco:variations}:
 \begin{center}
   $\Delta\tau_{ij}^k = 
@@ -104,7 +104,7 @@ následovně \cite{aco:variations}:
 \end{center}
 
 \subsubsection{Ant Quantity}
-Jde opět o~modifikaci Ant System upravující definici $\Delta\tau_{ij}^k$ (množství fermonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) na následující
+Jde opět o~modifikaci Ant System upravující definici $\Delta\tau_{ij}^k$ (množství feromonu přidaného na hranu z~$i$ do $j$ $k$-tým mravencem) na následující
 tvar \cite{aco:variations}:
 \begin{center}
   $\Delta\tau_{ij}^k = 
@@ -127,7 +127,7 @@ Hrany, které nepatří do nejlepší cesty, jsou aktualizovány dle vztahu uved
 
 \subsubsection{Ant Colony System}
 Ant Colony System je po Ant System další algoritmus založený na ACO. Přístup k~aktualizaci feromonu na hranách zůstal zachován, ale byl změněn způsob
-výběru dalšího vrcholu, do kterého má pokračovat mravenec při tvorbě svého řešení v~dané iteraci. Výběr vrcholu $j$ pro daší cestu $k$-tého mravence
+výběru dalšího vrcholu, do kterého má pokračovat mravenec při tvorbě svého řešení v~dané iteraci. Výběr vrcholu $j$ pro další cestu $k$-tého mravence
 je proveden následovně \cite{aco:acs}:
 \begin{center}
   $j = 
@@ -147,7 +147,7 @@ nejlepší mravenec (označme ho \emph{best}). Aktualizace feromonu na hranách 
 \end{center}
 kde $\Delta\tau_{ij}^{best}=\frac{1}{L_{best}}$ a hrana $ij$ je v~nejlepší cestě dané iterace.
 
-Hodnota feromonu je pak upravene tak, že přesahuje-li předem danou maximální hranici, je na ni zmenšena. Symetricky toto platí pro minimální hranici. Formálně
+Hodnota feromonu je pak upravena tak, že přesahuje-li předem danou maximální hranici, je na ni zmenšena. Symetricky toto platí pro minimální hranici. Formálně
 zapsáno \cite{aco:maxmin}:
 \begin{center}
   $\tau_{ij} = 
@@ -161,8 +161,8 @@ zapsáno \cite{aco:maxmin}:
 kde $\tau_{min}$ a $\tau_{max}$ jsou předem dané parametry určující minimální, respektive maximální možné hodnoty feromonu na hranách.
 
 \subsubsection{Rank-based Ant System}
-Ve variantě Rank-based Ant system provádí aktualizaci feromnu jen předem daný počet nejlepších mravenců, kteří jsou hodnoceny dle délky své cesty.
-Navíc je množství feromonu vypouštěného mravencem přímo uměrné kvalitě jeho cesty (t.j. mravenci s~kratší cestou vypouští víc feromonu). Je zřejmé,
+Ve variantě Rank-based Ant system provádí aktualizaci feromonu jen předem daný počet nejlepších mravenců, kteří jsou hodnoceny dle délky své cesty.
+Navíc je množství feromonu vypouštěného mravencem přímo úměrné kvalitě jeho cesty (t.j. mravenci s~kratší cestou vypouští víc feromonu). Je zřejmé,
 že pro účely tohoto algoritmu je nutné mravence seřadit dle délky jejich cesty, kde nejlepší bude nejkratší cesta. Aktualizace feromonu na hranách pak
 probíhá takto \cite{aco:ranked}:
 \begin{center}
@@ -223,18 +223,18 @@ Pro zpracování těchto parametrů byly navrženy následující dvě třídy:
   \end{itemize}
   \item \emph{ParametersParser}
   \begin{itemize}
-    \item[] Postupně prochází jednotlivé parametry předané aplikaci, provádí jejich konverzi do příslušných datových typů a ukladá je do odpovídajících
+    \item[] Postupně prochází jednotlivé parametry předané aplikaci, provádí jejich konverzi do příslušných datových typů a ukládá je do odpovídajících
     datových členu třídy \emph{Parameters}.
   \end{itemize}
 \end{itemize}
 
 \subsection{Zpracování vstupního souboru s~grafem}
 Graf pro algoritmus ACO je programu předáván prostřednictvím textového souboru, v~němž je v~předem daném formátu (více informaci viz. doplněk \ref{app:format})
-posán graf. Pro jeho zpracování slouží tato třída:
+popsán graf. Pro jeho zpracování slouží tato třída:
 \begin{itemize}
   \item \emph{GraphParser}
   \begin{itemize}
-    \item[] Třída poskytuje metodu pro zpracování vstupu, která čte postupně vstupní soubor řádek po řádku a jednotlivé řádky převadí do interní reprezentace,
+    \item[] Třída poskytuje metodu pro zpracování vstupu, která čte postupně vstupní soubor řádek po řádku a jednotlivé řádky převádí do interní reprezentace,
     jež je popsána v~části \ref{subsec:graph}.
   \end{itemize}
 \end{itemize}
@@ -248,11 +248,11 @@ třídou \emph{Vertex}).
 \begin{itemize}
   \item \emph{Graph}
   \begin{itemize}
-    \item[] Třída umožnuje přidávat do grafu jednotlivé vrcholy a hrany je spojující. Vrcholy jsou ukládány do hashovací tabulky, kde je jejich název v~datovém
-    type String asociován s~objektem třídy \emph{Vertex}. V~této hashovací tabulce je uložen jediný objekt představující daný vrchol a
+    \item[] Třída umožňuje přidávat do grafu jednotlivé vrcholy a hrany je spojující. Vrcholy jsou ukládány do hašovací tabulky, kde je jejich název v~datovém
+    type String asociován s~objektem třídy \emph{Vertex}. V~této hašovací tabulce je uložen jediný objekt představující daný vrchol a
     ve zbytku programu se pracuje s~ukazatelem na tady uložený objekt.
     
-    Podobně jsou zde ukládány hrany, které jsou uloženy opět v~hashovací tabulce, kde je asociováno id hrany (přiděleno programem samotným) typu integer
+    Podobně jsou zde ukládány hrany, které jsou uloženy opět v~hašovací tabulce, kde je asociováno id hrany (přiděleno programem samotným) typu integer
     s~objektem \emph{Edge} reprezentujícím hranu. Ve zbytku programu se pracuje s~ukazateli na hranu uloženou zde.
 
     Třída obsahuje také metodu \emph{serialize} umožnující převést graf zpět do textového formátu, který je použit i pro vstupní graf.
@@ -273,7 +273,7 @@ třídou \emph{Vertex}).
 \end{itemize}
 
 \subsection{Populace mravenců}
-Základem ACO algoritmu je populace mravenců, kteří postupně tvoří optimální řešení daného problému. Pro prácí s~populací mravenců byly navrženy tyto dvě třídy:
+Základem ACO algoritmu je populace mravenců, kteří postupně tvoří optimální řešení daného problému. Pro práci s~populací mravenců byly navrženy tyto dvě třídy:
 \begin{itemize}
   \item Ant
   \begin{itemize}
@@ -287,25 +287,25 @@ Základem ACO algoritmu je populace mravenců, kteří postupně tvoří optimá
 \end{itemize}
 
 \subsection{Implementace ACO algoritmů}
-Jak bylo popsáno v~části \ref{sec:algorithm}, existuje více algoritmů implementujících ACO meta-heruistiku.
-Aplikace implentuje všechny z~popsaných variant algoritmu. Implementaci algoritmu zastřešuje třída \emph{ACOAlgorithm} a jednotlivé varianty jsou pak
-implemetovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd realizujících ACO algoritmus bude následovat.
+Jak bylo popsáno v~části \ref{sec:algorithm}, existuje více algoritmů implementujících ACO meta-heuristiku.
+Aplikace implementuje všechny z~popsaných variant algoritmu. Implementaci algoritmu zastřešuje třída \emph{ACOAlgorithm} a jednotlivé varianty jsou pak
+implementovány třídou \emph{ASImplementation} a jejími potomky. Popis tříd realizujících ACO algoritmus bude následovat.
 
 \begin{itemize}
   \item ACOAlgorithm
   \begin{itemize}
     \item[] Obsahuje jako svoje datové členy obsahuje všechny potřebné informace k~provedení algoritmu -- třídu
     \emph{Graph}, třídu \emph{AntPopulation} a ukládá také nejlepší nalezenou cestu. Třída \emph{ACOAlgorithm} obaluje svými metodami všechny hlavní části obecného
-    ACO algoritmu, tedy vyvtoření řešení mravenci (metoda \emph{createAntSolution}), uložení nejlepší cesty (metoda \emph{saveBestPath}) 
-    a aktualizace feromonu (metoda \emph{updatePhermon}). Třída umožnuje také vypsat průběžné kroky algoritmu tak, aby byl demonstrován jeho průběh.
+    ACO algoritmu, tedy vytvoření řešení mravenci (metoda \emph{createAntSolution}), uložení nejlepší cesty (metoda \emph{saveBestPath}) 
+    a aktualizace feromonu (metoda \emph{updatePhermon}). Třída umožňuje také vypsat průběžné kroky algoritmu tak, aby byl demonstrován jeho průběh.
 
-    Dalším důležitým datovým členem této třídy je objekt představující instanci některé z~tříd implemetující Ant System, jeho modifikace, nebo alternativy jako
+    Dalším důležitým datovým členem této třídy je objekt představující instanci některé z~tříd implementující Ant System, jeho modifikace, nebo alternativy jako
     Ant Colony System, MaxMin Ant System atd. Tento objekt poskytuje metody pro aktualizaci feromonu na hranách a operace s~tím spojené,
     či výpočtu pravděpodobnosti výběru dalšího uzlu v~cestě v~souladu s~odpovídající variantou ACO algoritmu.
   \end{itemize}
   \item Konkrétní implementace ACO
     \item[] Aplikace poskytuje více implementací ACO. Základní třídou je ASImplementation, která implementuje Ant System v~jeho základní podobě. Tuto třídu
-    dědí ostatní třídy implementující jiné varianty ACO a případně pomocí polyformismu upravují ty části algoritmu, v~které se daná varianta liší. Implementovány
+    dědí ostatní třídy implementující jiné varianty ACO a případně pomocí polymorfismu upravují ty části algoritmu, v~které se daná varianta liší. Implementovány
     byly následující třídy:
     \begin{itemize}
       \item ASImplementation -- implementace základního Ant System. Implementuje všechny metody potřebné pro provedení algoritmu jako aktualizace feromonu na
@@ -331,13 +331,13 @@ Během implementace byly učiněny následující zpřesnění ACO algoritmu k~p
 \end{itemize}
 
 \subsection{Vývojové prostředí a nástroje}
-Implementace byla provedena v~jazyce C++ bez použítí externích knihoven. Program byl vyvíjen a testován na systému Linux (distribuce Debian Wheezy) a na školním
+Implementace byla provedena v~jazyce C++ bez použití externích knihoven. Program byl vyvíjen a testován na systému Linux (distribuce Debian Wheezy) a na školním
 serveru \emph{merlin.fit.vutbr.cz}.
 
 \section{Experimenty a vyhodnocení}
 \label{sec:eval}
 % popsat nejaky rozumny graf/nakreslit ho -> udelat graf vzadelnosti odchylek v zavislosti na poradi prochazky
-Aplikace byla testována na problému obchodního cestujícího. Grafy, pomocí nichž je problém zadán, byly získany z~TSPLIB \cite{TSPLIB}.
+Aplikace byla testována na problému obchodního cestujícího. Grafy, pomocí nichž je problém zadán, byly získány z~TSPLIB \cite{TSPLIB}.
 Použité grafy lze najít ve složce \emph{examples/}, kde jsou již grafy konvertovány do vstupního formátu pro dokumentovanou aplikaci. Pro bližší popis
 byla vybrána úloha \emph{d198}, se kterou již byly provedeny experimenty v~\cite{aco:maxmintsp,aco:acs}. V~následujících experimentech byly použity tyto
 parametry:
@@ -378,7 +378,7 @@ v~implementacích z~\cite{aco:maxmintsp,aco:acs}, alespoň dle experimentů prov
 \url{http://iridia.ulb.ac.be/~mdorigo/ACO/aco-code/public-software.html}} bez a s~použitím příslušných optimalizací.
 
 Graf \ref{fig:best} dokumentuje konvergenci k~optimálnímu řešení, které bylo nalezeno algoritmem MaxMin Ant System během jednoho z~pokusů.
-Na ose $x$ je pořadí iterace a na ose $y$ cena nejlešího řešení v~dané iteraci. Je patrné, že přibližně od 500. iterace již mravenci v~další iteracích lepší řešení
+Na ose $x$ je pořadí iterace a na ose $y$ cena nejlepšího řešení v~dané iteraci. Je patrné, že přibližně od 500. iterace již mravenci v~další iteracích lepší řešení
 nenacházeli, nýbrž vždy dospěli k~(lokálnímu) optimu.
 
 \begin{figure}[bt]
@@ -414,7 +414,7 @@ Nejlepší výsledek nalezený programem $16138$ se tedy odlišuje od optima o~$
 
 Na grafu \ref{fig:best_lin} je znázorněna konvergence k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y
 cena nejlepšího řešení v~dané iteraci. Graf \ref{fig:best_lin} je založen na jednom z~běhů algoritmu MaxMin Ant system, které byly provedeny během experimentu.
-Tentokrát bylo nalezeno lokální optimum po 300 iteracích a z~něho již se algoritmus v~dalších iteracích nedostal.
+Tentokrát bylo nalezeno lokální optimum po 300 iteracích a z~něho se algoritmus v~dalších iteracích nedostal.
 \begin{figure}[bt]
 \begin{center}
 \scalebox{0.6}
@@ -463,13 +463,13 @@ Konvergence k~optimálnímu řešení \emph{rat783} během jednotlivých iterac�
 
 \section{Závěr}
 \label{sec:concl}
-Byla implemetována konzolová aplikace demonstrující činnost optimalizační meta-heuristiky Ant Colony Optimization. 
+Byla implementována konzolová aplikace demonstrující činnost optimalizační meta-heuristiky Ant Colony Optimization. 
 Implementována byla základní varianta Ant System, některé
 modifikace Ant System, dále také varianta Ant Colony System, MaxMin Ant System a Rank-based Ant System.
 Implementace byla provedena v~C++ s~použitím objektově orientovaného přístupu tak, aby by bylo snadné další rozšíření programu o~další varianty ACO.
 
 Aplikace byla testována na několika grafech popisujících problém obchodního cestujícího, v~nichž se ji nepodařilo najít zcela optimální cestu, ale odchylka 
-od optima byla v~řádu jednotek procent. Dalším možné rozšíření aplikace spočivá v~implementaci optimalizací
+od optima byla v~řádu jednotek procent. Dalším možné rozšíření aplikace spočívá v~implementaci optimalizací
 pro získání lepších řešení.
 
 % zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
@@ -513,7 +513,7 @@ která bude použita pokud parametr není uživatelem zadán):
        \item maxmin ... Max-Min Ant System
        \item ranked ... Rank-based Ant System
       \end{itemize}
-      \item Následující parametry jsou závislé na zvoloném algoritmu. Pokud budou použity v~kombinaci s~jiným algoritmem, budou ignorovány.
+      \item Následující parametry jsou závislé na zvoleném algoritmu. Pokud budou použity v~kombinaci s~jiným algoritmem, budou ignorovány.
       \begin{itemize}
         \item -x reálné číslo ... Maximální hodnota feromonu na hraně (Max-Min Ant System). \defVal{0.8}
         \item -n reálné číslo ... Minimální hodnota feromonu na hraně (Max-Min Ant System). \defVal{0.1}
@@ -524,11 +524,15 @@ která bude použita pokud parametr není uživatelem zadán):
   \end{itemize}
 Použité označení u~konstant a koeficientů odpovídá definici v~sekci \ref{sec:algorithm}.
 
+Pro demonstraci běhu programu, nejen získání nejlepšího řešení, se silně doporučuje použití přepínač \emph{-v}.
+
+\subsection{Vstup}
 Program čeká jako vstup textový soubor s~popisem grafu, v~němž se bude hledat optimální cesta. Graf musí být popsán ve formátu definovaném 
 v~doplňku \ref{app:format}. Ve složce \emph{examples/} jsou příklady grafů, na kterých lze program testovat.
 
-Příklad spuštění:\\
-\texttt{./aco -i ../examples/lin318/lin318.aco -a 25 -m 1000 -d 2 -e 0.2 -p 1\\-g maxmin -x 0.004728 -n 0.00001}
+\subsection{Příklad spuštění}
+Následující příklad spuštění lze spustit pomocí příkazu \texttt{make run\_example} z hlavní složky programu:\\
+\texttt{./aco -i examples/ex16/ex16.aco -a 10 -m 10 -d 2 -e 0.2 -p 1\\ -g maxmin -x 0.5 -n 0.1 -v}
 
 \section{Formát vstupního souboru}
 \label{app:format}
@@ -536,7 +540,7 @@ Vstupní soubor bude obsahovat textový popis grafu takový, že na každém ř�
 \begin{center}
   \texttt{$X$ $Y$ $distance$}
 \end{center}
-kde $X$, $Y$ jsou vrcholy grafu a $distance$ je vzdálenost mezi nimi. Samotné vrcholy tedy není nutné explictně definovat. Pokud bude některá hrana
+kde $X$, $Y$ jsou vrcholy grafu a $distance$ je vzdálenost mezi nimi. Samotné vrcholy tedy není nutné explicitně definovat. Pokud bude některá hrana
 definována vícekrát, je jako rozhodující brána první definice a ostatní jsou ignorovány. Program vypíše v~takovémto případu varování.
 
 \newpage

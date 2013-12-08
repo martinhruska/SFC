@@ -9,7 +9,7 @@ void ACO::ACOAlgorithm::compute()
   {
     if (verbose_)
     {
-      std::cout << i+1 << ". iteration ===========================" << std::endl;
+      std::cout << i+1 << ". iterace ===========================" << std::endl;
     }
     try
     {
@@ -21,18 +21,18 @@ void ACO::ACOAlgorithm::compute()
 
       if (verbose_)
       {
-        std::cout << "Best all time: ";
+        std::cout << "Dosud nejlepsi reseni: ";
         for (Vertex* v : bestPath_)
         {
          std::cout << graph_.getTranslationFromId(v->getId())  <<  " ";
         }
         if (bestPathCost_ == FLT_MAX)
         {
-          std::cout << "Solution not found" << std::endl;
+          std::cout << "Reseni nenalezeno" << std::endl;
         }
         else
         {
-          std::cout << "Cost " << bestPathCost_ << std::endl;
+          std::cout << "Cena " << bestPathCost_ << std::endl;
         }
       }
     }
@@ -105,9 +105,9 @@ void ACO::ACOAlgorithm::saveBestPath()
   { // get best solution from last iteration
     if (verbose_)
     {
-      std::cout << "Ant " << ant->getId() << ": "
-        << printPath(ant->getPath()) << " with cost "
-        << ant->getPathCost() << " and goal satisfied: " << ant->isGoalSatisfied()
+      std::cout << "Mravenec " << ant->getId() << ": "
+        << printPath(ant->getPath()) << " cena "
+        << ant->getPathCost() << " a cil splnen: " << ant->isGoalSatisfied()
         << std::endl;
     }
 
@@ -135,8 +135,8 @@ void ACO::ACOAlgorithm::saveBestPath()
 
   if (verbose_)
   {
-    std::cout << "Iteration best " << printPath(bestAnt->getPath())
-      << " with cost " << bestAnt->getPathCost() << std::endl;
+    std::cout << "Nejlepsi cesta iterace " << printPath(bestAnt->getPath())
+      << " cena " << bestAnt->getPathCost() << std::endl;
   }
   if (bestAnt->getPathCost() <= bestPathCost_)
   {

@@ -6,4 +6,4 @@ set terminal png
 set output "best.png"
 set autoscale
 set grid
-plot "eval/lin318/best.data" using 1:2 with points title ""
+plot "eval/lin318/bestb.data" using 1:2 with points title ""

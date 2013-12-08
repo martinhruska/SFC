@@ -8,33 +8,33 @@ using ACO::ParametersParser;
 
 void ParametersParser::printHelp()
 {
-  std::cout << "USAGE: aco -i file [options]" << std::endl;
-  std::cout << "OPTIONS (compulsory):" << std::endl;
-  std::cout << "  -i file ......... A path to input file" << std::endl;
+  std::cout << "Pouziti: aco -i cesta [parametry]" << std::endl;
+  std::cout << "Parametry (povinne):" << std::endl;
+  std::cout << "  -i cesta ......... Cesta k vstupnimu souboru" << std::endl;
   std::cout << "OPTIONS (optional):" << std::endl;
-  std::cout << "  -v .............. Make program verbose" << std::endl;
-  std::cout << "  -a integer ...... Value is integer defining number of the ants" << std::endl;
-  std::cout << "  -m integer ...... Value is integer defining number of the iteration of algorithm" << std::endl;
-  std::cout << "  -p float ........ Weight of pheromon on an edge for chosing another vertex in an ant solutin." << std::endl;
-  std::cout << "  -d float ........ Weight of distance of a an edge for chosing another vertex in an ant solutin." << std::endl;
-  std::cout << "  -c float ........ Constant of pheromon addition to the edges after one iteration" << std::endl;
-  std::cout << "  -e float ........ Constant from interval <0,1> defines speed of evaporation of phermon" << std::endl;
-  std::cout << "  -r .............. Turn off randomness in chosing path with the same probability" << std::endl;
-  std::cout << "  -g string ....... Version on the ACO algorithm" << std::endl;
-  std::cout << "  Following version are available" << std::endl;
-  std::cout << "    default ....... Default version of algorithm" << std::endl;
-  std::cout << "    density ....... Ant-Density modification of ACO algorithm" << std::endl;
-  std::cout << "    quantity ....... Ant-Quality version of ACO algorithm" << std::endl;
-  std::cout << "    elitist ....... Elitist version of ACO algorithm" << std::endl;
-  std::cout << "    acs ........... Ant Colony System version" << std::endl;
-  std::cout << "    maxmin ........ Maxmin Ant System version" << std::endl;
-  std::cout << "    ranked ........ Rank-base Ant System version" << std::endl;
-  std::cout << "  Following options are dependent on the chosen algorithm (they are ignored with the others algorithms)" << std::endl;
-  std::cout << "    -x float ...... Maximal value of pheromon on an edge (MaxMin Ant System)" << std::endl;
-  std::cout << "    -n float ...... Minimal value of pheromon on an edge (MaxMin Ant System)" << std::endl;
-  std::cout << "    -w int ........ Number of the best ants used for evaluation of the next pheromon level (Rank-based algorithm)" << std::endl;
-  std::cout << "    -q float ...... Constant from interval <0,1> used for chosing method of creating ant solution (ACS algorithm)" << std::endl;
-  std::cout << "Please see documentation for the default values of parameters" << std::endl;
+  std::cout << "  -v .............. Program demostruje svoji cinnost pomoci vypisu" << std::endl;
+  std::cout << "  -a integer ...... Cele cislo udavajici pocet mravencu" << std::endl;
+  std::cout << "  -m integer ...... Cele cislo udavajici pocet iteraci" << std::endl;
+  std::cout << "  -p float ........ Realne cislo udavajici vahu feromonu na hrane pro vyber dalsi cesty" << std::endl;
+  std::cout << "  -d float ........ Realne cislo udavajici vahu delky hrany pro vyber dalsi cesty" << std::endl;
+  std::cout << "  -c float ........ Realne cislo udavajici mnozstvi feromonu vypusteneho jednim mravencem v jedne iteraci" << std::endl;
+  std::cout << "  -e float ........ Realne cisto z intervalu <0,1> udavajici koeficient odparovani feromonu" << std::endl;
+  std::cout << "  -r .............. Vypne nahodny vyber z hran se stejnou pravdepodobnosti vyberu pro dalsi cestu" << std::endl;
+  std::cout << "  -g string ....... Verze ACO algoritu" << std::endl;
+  std::cout << "  Nasledujici verze jsou dostupne" << std::endl;
+  std::cout << "    default ....... Ant System" << std::endl;
+  std::cout << "    density ....... Ant System Density" << std::endl;
+  std::cout << "    quantity ...... Ant System Quantity" << std::endl;
+  std::cout << "    elitist ....... Ant System Elitisti" << std::endl;
+  std::cout << "    acs ........... Ant Colony System" << std::endl;
+  std::cout << "    maxmin ........ Maxmin Ant System" << std::endl;
+  std::cout << "    ranked ........ Rank-based Ant System" << std::endl;
+  std::cout << "  Nasledujici volby jsou zavisle na volbe algoritmu (jinak jsou ignorovany)" << std::endl;
+  std::cout << "    -x float ...... Maximalni hodnota feromonu na hrane (MaxMin Ant System)" << std::endl;
+  std::cout << "    -n float ...... Minimalni hodnota feromonu na hrane (MaxMin Ant System)" << std::endl;
+  std::cout << "    -w int ........ Pocet mravencu vypoustejicich feromon (Rank-based algorithm)" << std::endl;
+  std::cout << "    -q float ...... Konstanta z intervalu <0,1> pouzita pro vyber metodiky vyberu dalsiho cesty (ACS algorithm)" << std::endl;
+  std::cout << "Blizsi popis parametru lze najit v dokumentaci" << std::endl;
 }
 
 /**

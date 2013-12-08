@@ -27,19 +27,24 @@ allIterBest = {}
 allTimeBest = -1
 
 for i in inFile:
+  #m = re.match(r"([1-9][0-9]*). iterace",i)
   m = re.match(r"([1-9][0-9]*). iteration",i)
   if m != None: # get current iteration
     currentState = m.group(1)
     antsRes[currentState] = [] # init antsRes hash array
+  #m = re.match(r"Mravenec.*cena ([1-9][0-9]*).*",i)
   m = re.match(r"Ant.*cost ([1-9][0-9]*).*",i)
   if m != None: # get ant value
     antsRes[currentState].append(m.group(1))
+  #m = re.match(r"Nejlepsi cesta iterace.*cena ([1-9][0-9]*).*",i)
   m = re.match(r"Iteration best.*cost ([1-9][0-9]*).*",i)
   if m != None: # get best iteration value
     iterBest[currentState] = m.group(1)
+  #m = re.match(r"Dosud nejlepsi reseni.*Cena ([1-9][0-9]*).*",i)
   m = re.match(r"Best all time.*Cost ([1-9][0-9]*).*",i)
   if m != None: # get best value so fat
     allIterBest[currentState] = m.group(1)
+  #m = re.match(r"Nejlepsi nalezena cesta.*Cost ([1-9][0-9]*).*",i)
   m = re.match(r"Final result.*Cost ([1-9][0-9]*).*",i)
   if m != None: # get best value so fat
     allTimeBest = m.group(1)

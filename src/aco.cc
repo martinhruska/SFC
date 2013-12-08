@@ -31,7 +31,7 @@
 
 using namespace ACO;
 
-const std::string e_FileRead = "Cannot read a given file";
+const std::string e_FileRead = "Nelze precist zadany soubor";
 
 /**
  * Parameters are processed here
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
   }
   catch (std::runtime_error& e)
   {
-    std::cerr  <<  "Error in parsing parameters: " <<
+    std::cerr  <<  "Chyba pri zpracovani parametru: " <<
       e.what()  <<  std::endl;
     return EXIT_FAILURE;
   }
@@ -131,14 +131,14 @@ int main(int argc, char** argv)
   {// tries parse graph
     if (parameters.getInputFile().size() == 0)
     { // no input file
-      std::cerr  <<  "No input file is given. Read help for more information"  << std::endl;
+      std::cerr  <<  "Nebyl zadan vstupni soubor. Pro vice informaci ctete napovedu (./aco -h)"  << std::endl;
       return EXIT_FAILURE;
     }
     parseGraph(parameters.getInputFile(), graph);
   }
   catch (std::runtime_error& e)
   {
-    std::cerr  << "Error in parsing graph: "  << e.what()
+    std::cerr  << "Chyba v parsovani grafu: "  << e.what()
       << std::endl;
     return EXIT_FAILURE;
   }
@@ -157,7 +157,7 @@ int main(int argc, char** argv)
 
   if (parameters.getAntsNumber() <= 0)
   { // check number of ants. If there are no ants defined, it will end
-    std::cerr  <<  "Population of ants is to small"  <<  std::endl;
+    std::cerr  <<  "Zadana prilis mala populace mravencu pro beh programu"  <<  std::endl;
     return EXIT_FAILURE;
   }
 
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
      parameters.getDistanceCoef(), parameters.isRandom());
   if (parameters.isVerbose())
   {
-    std::cout << "Population size is: " << ants.getPopulation().size() << std::endl;
+    std::cout << "Velikost populace mravencu je: " << ants.getPopulation().size() << std::endl;
   }
  
   // computation alone
@@ -183,10 +183,10 @@ int main(int argc, char** argv)
   }
   Ant::Path path = aco.getResult();
 
-  std::cout  <<  "Best path: ";
+  std::cout  <<  "Nejlepsi nalezena cesta: ";
   if (path.size() == 0)
   {
-    std::cout  <<  "Solution not found"  <<  std::endl;
+    std::cout  <<  "Reseni nenalezeno"  <<  std::endl;
   }
   else
   {

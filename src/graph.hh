@@ -22,7 +22,7 @@ private: // private data types
   typedef std::string String;
 
 private: // private constants
-  const String e_edgeAlreadyDeclared = "The edge has been already declared";
+  const String e_edgeAlreadyDeclared = "Vrchol jiz byl definovan";
 
 private: // private data types
   typedef std::unordered_map<int, Edge> EdgesTranslator;
