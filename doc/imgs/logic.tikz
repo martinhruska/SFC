@@ -1,0 +1,27 @@
+\begin{tikzpicture}[
+  node distance = 4cm,
+  block_main/.style={rectangle, text centered, rounded corners, thick, fill=blue!50,
+    minimum height = 5em, minimum width = 5em},
+  block/.style={rectangle, text centered, rounded corners, thick, fill=orange!50,
+    minimum height = 5em, minimum width = 5em, text width = 6em},
+  line/.style={draw, -}
+  ]
+
+\node [block_main] (main) {main()};
+\node [block, right of=main] (param) {Zpracování\\parametrů};
+\node [block, above of=param, right of=main] (graph_pars) {Zpracování vstupního grafu};
+\node [block, left of=graph_pars] (graph) {Interní reprezentace grafu};
+\node [block, left of=main] (ants) {Populace mravenců};
+\node [block, left of=graph] (aco) {Implementace ACO algoritmu};
+
+\path [line] (main) -- (param);
+\path [line] (main) -- (graph_pars);
+\path [line] (main) -- (graph);
+\path [line] (main) -- (aco);
+\path [line] (main) -- (ants);
+
+\path [line] (graph) -- (graph_pars);
+\path [line] (graph) -- (aco);
+\path [line] (aco) -- (ants);
+\path [line] (graph) -- (ants);
+\end{tikzpicture}
