@@ -22,7 +22,7 @@
 \section{Úvod}
 \label{sec:intro}
 Ant colony optimization (ACO), neboli Optimalizace mravenčí kolonií je optimalizační meta-heuristika řadící se do oboru umělé inteligence,
-konkrétně patřící mezi metody inteligence hejna. Algoritmus hledá optimální řešení pomocí vzájemně komunikujících agentů (umělých mravenců), kteří
+konkrétně spadá mezi metody inteligence hejna. Algoritmus hledá optimální řešení pomocí vzájemně komunikujících agentů (umělých mravenců), kteří
 inkrementálně hledají nejlepší cestu grafem s~oceněnými hranami \cite{aco:main}. 
 Z~tohoto důvodu musí být optimalizační problém popsatelný právě oceněným grafem, tudíž se metoda používá především pro řešení diskrétních problémů.
 
@@ -38,7 +38,7 @@ uživatelskou příručku (doplněk \ref{app:help}) a popis formátu vstupního 
 \section{ACO Algoritmus}
 \label{sec:algorithm}
 Jak bylo uvedeno v~úvodní sekci \ref{sec:intro}, algoritmus pracuje s~množinou mravenců, kteří inkrementálně řeší daný optimalizační problém tak, že
-v~jednotlivých iteracích hledají optimální cestu ve váženém grafu popisujícím daný problém. Za řešení úlohy se považuje cesta (posloupnost vrcholů grafu)
+v~jednotlivých iteracích hledají optimální cestu ve váženém grafu popisujícím tento problém. Za řešení úlohy se považuje cesta (posloupnost vrcholů grafu)
 procházející všemi vrcholy grafu právě
 jednou s~tím, že se mravenec nakonec cesty vrací do počátečního uzlu. Každá hrana grafu má určitou hladinu feromonu, který vypouští mravenci při každém průchodu.
 Feromon  ovlivňuje výběr hrany pro další krok mravence při tvorbě řešení v~dané iteraci.
@@ -233,7 +233,7 @@ Graf je interně reprezentován pomocí následujících tříd:
   \item \emph{Graph}: Třída uchovává jako datové členy množiny hran (objekty třídy \emph{Edge}) a vrcholů (objekty třídy \emph{Vertex}).
     Umožňuje také zpětnou serializaci grafu do textové podoby metodou \emph{serialize}.
 
-  \item \emph{Vertex}: Třída reprezentující vrchol v~grafu. Obsahuje seznam objektů třídy \emph{Edge} reprezentující hrany, které spojují daný vrchol s~danými
+  \item \emph{Vertex}: Třída reprezentující vrchol v~grafu. Obsahuje seznam objektů třídy \emph{Edge} reprezentující hrany, které spojují daný vrchol s~dalšími
     vrcholy.
 
   \item \emph{Edge}: Třída reprezentující hranu grafu. V~datových členech mimo jiné uchovává vrcholy, které spojuje,
@@ -289,23 +289,26 @@ serveru \emph{merlin.fit.vutbr.cz}.
 \label{sec:eval}
 % popsat nejaky rozumny graf/nakreslit ho -> udelat graf vzadelnosti odchylek v zavislosti na poradi prochazky
 Aplikace byla testována na problému obchodního cestujícího. Grafy, pomocí nichž je problém zadán, byly získány z~TSPLIB \cite{TSPLIB}.
-Použité grafy lze najít ve složce \emph{examples/}, kde jsou již grafy konvertovány do vstupního formátu pro dokumentovanou aplikaci. Pro bližší popis
-byla vybrána úloha \emph{d198}, se kterou již byly provedeny experimenty v~\cite{aco:maxmintsp,aco:acs}. V~následujících experimentech byly použity tyto
-parametry:
+Použité grafy lze najít ve složce \emph{examples/}, kde jsou již grafy konvertovány do vstupního formátu aplikace. Pro bližší popis
+byla vybrána úloha \emph{d198}, \emph{lin318}, se kterou již byly provedeny experimenty v~\cite{aco:maxmintsp,aco:acs}. V~následujících experimentech
+byly použity tyto parametry:
   \begin{itemize}
     \item $\alpha=1, \beta=2, \rho=0.2$
     \item Počet mravenců: 25
     \item Počet iterací: 1000
   \end{itemize}
-Pokud jsou uváděny průměrné hodnoty, jsou tyto průměry vypočteny z~minimálně 15 měření.
+a tyto ACO algoritmy:
+\begin{itemize}
+  \item MaxMin Ant System, kde maximum bylo zvoleno dle vztahu $\frac{1}{\rho}\cdot\frac{1}{L^*}$, kde $L^*$ je cena optimálního řešení,
+  a minimun dle $\frac{\tau_{max}}{2\cdot n}$ tedy stejně jako v~\cite{aco:maxmintsp}.
+  \item Ant Colony System, kde hodnota $q_0=0.95$ stejně jako v~\cite{aco:acs}.
+\end{itemize}
+
+Pokud jsou v~dalším textu uváděny průměrné hodnoty, jsou tyto průměry vypočteny z~minimálně 15 měření.
 % provedl jsem ho
 
 \subsection{d198}
-Tato varianta úlohy obsahuje 198 vrcholů grafu, přes které se hledá optimální cesta. Pro experiment byly použity dvě varianty algoritmu:
-\begin{itemize}
-  \item MaxMin Ant System, kde jako minimum byla zvolena hodnota $0.000001$ a jako maximum $0.000473$ a to dle vztahu z~\cite{aco:maxmintsp}.
-  \item Ant Colony System, kde hodnota $q_0=0.95$ stejně jako v~\cite{aco:acs}.
-\end{itemize}
+Tato varianta úlohy obsahuje 198 vrcholů grafu, přes které se hledá optimální cesta. 
 Výsledky experimentů jsou shrnuty v~tabulce \ref{tabd198}. Optimálním řešením tohoto problému je $15 780$ \cite{aco:acs}.
 \begin{table}[tb]
 \begin{center}
@@ -328,7 +331,7 @@ přisoudit použití dalších heuristik jako \emph{zrychlení aktualizace ferom
 v~implementacích z~\cite{aco:maxmintsp,aco:acs}, alespoň dle experimentů provedených s~nástrojem \emph{ACOTSP} \footnote{nástroj je dostupný na
 \url{http://iridia.ulb.ac.be/~mdorigo/ACO/aco-code/public-software.html}} bez a s~použitím příslušných optimalizací.
 
-Graf \ref{fig:best} dokumentuje konvergenci k~optimálnímu řešení, které bylo nalezeno algoritmem MaxMin Ant System během jednoho z~pokusů.
+Obrázek \ref{fig:best} dokumentuje konvergenci k~optimálnímu řešení, které bylo nalezeno algoritmem MaxMin Ant System během jednoho z~pokusů.
 Na ose $x$ je pořadí iterace a na ose $y$ cena nejlepšího řešení v~dané iteraci. Je patrné, že přibližně od 500. iterace již mravenci v~další iteracích lepší řešení
 nenacházeli, nýbrž vždy dospěli k~(lokálnímu) optimu.
 
@@ -352,8 +355,8 @@ a porovnání s~\cite{aco:maxmintsp,aco:acs} lze najít v~tabulce \ref{tablin318
   \begin{tabular}{ | l | r | r |}
    \hline
     & \textbf{Nejlepší výsledek} & \textbf{Průměrný výsledek} \\ \hline \hline
-    ACO MaxMin & $16138$ & $16560.5$ \\ \hline
-    ACO ACS & $16803$ & $17520.2$ \\ \hline
+    ACO MaxMin &$44454.7$ & $46500.9$ \\ \hline
+    ACO ACS & $47893.3$ & $48186.44$ \\ \hline
     ACS z~\cite{aco:acs} & $42 029$ & $42 029$ \\ \hline
     MaxMin z~\cite{aco:maxmintsp} & $42 029$ & $42 029$\\ \hline
    \end{tabular}
@@ -361,10 +364,10 @@ a porovnání s~\cite{aco:maxmintsp,aco:acs} lze najít v~tabulce \ref{tablin318
    \label{tablin318}
 \end{center}
 \end{table}
-Nejlepší výsledek nalezený programem $16138$ se tedy odlišuje od optima o~$X procent$. Důvody tohoto již byly uvedeny výše.
+Nejlepší výsledek nalezený programem $44454.7$ se tedy odlišuje od optima o~$5.77\%$.
 
-Na grafu \ref{fig:best_lin} je znázorněna konvergence k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y
-cena nejlepšího řešení v~dané iteraci. Graf \ref{fig:best_lin} je založen na jednom z~běhů algoritmu MaxMin Ant system, které byly provedeny během experimentu.
+Na obrázku \ref{fig:best_lin} je znázorněna konvergence k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y
+cena nejlepšího řešení v~dané iteraci. Obrázek \ref{fig:best_lin} je založen na jednom z~běhů algoritmu MaxMin Ant system, které byly provedeny během experimentu.
 Tentokrát bylo nalezeno lokální optimum po 300 iteracích a z~něho se algoritmus v~dalších iteracích nedostal.
 \begin{figure}[bt]
 \begin{center}
@@ -390,15 +393,15 @@ Měření a porovnání s~experimenty z~\cite{aco:maxmintsp,aco:acs} je v~tabulc
     & \textbf{Nejlepší výsledek} & \textbf{Průměrný výsledek} \\ \hline \hline
     ACO MaxMin & $16138$ & $16560.5$ \\ \hline
     ACO ACS & $7.5$ & $92.5$ \\ \hline
-    ACS z~\cite{aco:acs} & $42 029$ & $42 029$ \\ \hline
-    MaxMin z~\cite{aco:maxmintsp} & $42 029$ & $42 029$\\ \hline
+    ACS z~\cite{aco:acs} & $9015$ & $9066$ \\ \hline
+    MaxMin z~\cite{aco:maxmintsp} & $8806$ & $8814.4$\\ \hline
    \end{tabular}
-   \caption{Tabulka výsledků experimentu s~úlohou rat318.}
+   \caption{Tabulka výsledků experimentu s~úlohou rat783.}
    \label{rat783}
 \end{center}
 \end{table}
 
-Graf \ref{rat783} ilustruje opět konvergenci k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y cena nejlepšího
+Obrázek \ref{rat783} ilustruje opět konvergenci k~optimálnímu řešení během jednotlivých iterací. Na ose x je uvedeno pořadí iterace a ose y cena nejlepšího
 řešení v~dané iteraci. Jedná se o~jeden z~běhů algoritmu Ant System MaxMin provedených během experimentů. Jak je zřejmé, tak po X iteracích se algoritmus
 dostal do lokálního optima a lepší řešení nalezeno již nebylo.
 \begin{figure}[bt]
@@ -416,13 +419,13 @@ Konvergence k~optimálnímu řešení \emph{rat783} během jednotlivých iterac�
 \section{Závěr}
 \label{sec:concl}
 Byla implementována konzolová aplikace demonstrující činnost optimalizační meta-heuristiky Ant Colony Optimization. 
-Implementována byla základní varianta Ant System, některé
+Implementována byla její základní varianta Ant System, některé
 modifikace Ant System, dále také varianta Ant Colony System, MaxMin Ant System a Rank-based Ant System.
-Implementace byla provedena v~C++ s~použitím objektově orientovaného přístupu tak, aby by bylo snadné další rozšíření programu o~další varianty ACO.
+Implementace byla provedena v~C++ s~použitím objektově orientovaného přístupu tak, aby by bylo snadné případné rozšíření programu o~další varianty ACO.
 
-Aplikace byla testována na několika grafech popisujících problém obchodního cestujícího, v~nichž se ji nepodařilo najít zcela optimální cestu, ale odchylka 
-od optima byla v~řádu jednotek procent. Dalším možné rozšíření aplikace spočívá v~implementaci optimalizací
-pro získání lepších řešení.
+Aplikace byla testována na několika grafech popisujících problém obchodního cestujícího, v~nichž se jí nepodařilo najít zcela optimální cestu, ale odchylka 
+od optima byla v~řádu jednotek procent. Dalším možné rozšíření aplikace spočívá v~implementaci optimalizací jednotlivých algoritmů
+pro získání lepších řešení zadaných optimalizačních úloh.
 
 % zhodnit co bylo udelano - knihovna pro experimentovani, snadno rozsiritelna
 \newpage
@@ -448,7 +451,7 @@ která bude použita pokud parametr není uživatelem zadán):
     \item Nepovinné parametry parametry
     \begin{itemize}
       \item -v ... Zapne výpisy o~činnosti algoritmu v~každé iteraci algoritmu
-      \item -a celé číslo ... Hodnota je počet mravenců v~populaci. \defVal{10}
+      \item -a celé číslo ... Počet mravenců v~populaci. \defVal{10}
       \item -m celé číslo ... Počet iterací, které algoritmus provede. \defVal{100}
       \item -p reálné číslo ...  Koeficient $\alpha$. \defVal{1.0}
       \item -d reálné číslo ... Koeficient $\beta$. \defVal{1.0}
